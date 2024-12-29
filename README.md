@@ -1,4 +1,3 @@
-# Web Template
+#ToDoList
 
-    This is to serve as a template for a web project that uses webpack for bundling. 
-    Simply use this as a template during git repository creation to get a pre-setup project environment with webpack.
+    This project is to develop a todo list web application while utilizing OOP and SOLID concepts.
