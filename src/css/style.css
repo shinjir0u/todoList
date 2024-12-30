@@ -1,0 +1,105 @@
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+#root, #__next {
+  isolation: isolate;
+}
+
+/* My CSS */
+
+:root {
+  --milky-color: rgb(229, 229, 203);
+  --cream-color: rgb(213, 206, 163);
+  --brown-color: rgb(60, 42, 33);
+  --black-color: rgb(26, 18, 11);
+}
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(500px, 4fr);
+}
+
+.sidebar {
+  background-color: var(--black-color);
+  display: grid;
+  grid-template-rows: minmax(80px, 100px) minmax(500px, 1fr);
+  padding: 1em;
+}
+
+.logo-container {
+  display: grid;
+  grid-template-columns: minmax(70px, 80px) minmax(150px, 1fr);
+  gap: 1em;
+  place-items: center;
+}
+
+.logo {
+  fill: var(--milky-color);
+  width: 5rem;
+}
+
+.logo-text {
+  color: var(--milky-color);
+  font-size: 4rem;
+  font-weight: bold;
+  justify-self: start;
+}
+
+.menu-container {
+  margin-top: 10vh;
+  display: grid;
+}
+
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.project {
+  appearance: none;
+  background-color: var(--milky-color);
+  color: var(--brown-color);
+  border-radius: 5px;
+}
+
+.project:hover {
+  background-color: var(--cream-color);
+  font-weight: bold;
+}
