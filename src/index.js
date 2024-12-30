@@ -1,4 +1,3 @@
-import { DEFAULT_STATS } from "webpack-dev-server";
 import "./css/style.css";
 
 const createTodoItem = function(title = "", description="", dueDate="", priority="", note="") {
