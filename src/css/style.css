@@ -46,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
   --milky-color: rgb(229, 229, 203);
   --cream-color: rgb(213, 206, 163);
   --brown-color: rgb(60, 42, 33);
-  --black-color: rgb(26, 18, 11);
+  --dark-brown-color: rgb(26, 18, 11);
 }
 
 .container {
@@ -56,7 +56,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar {
-  background-color: var(--black-color);
+  background-color: var(--dark-brown-color);
   display: grid;
   grid-template-rows: minmax(80px, 100px) minmax(500px, 1fr);
   padding: 1em;
@@ -64,14 +64,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .logo-container {
   display: grid;
-  grid-template-columns: minmax(70px, 80px) minmax(150px, 1fr);
+  grid-template-columns: minmax(50px, 65px) minmax(150px, 1fr);
   gap: 1em;
   place-items: center;
 }
 
 .logo {
   fill: var(--milky-color);
-  width: 5rem;
+  width: 4rem;
 }
 
 .logo-text {
@@ -95,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
 .project {
   appearance: none;
   background-color: var(--milky-color);
-  color: var(--brown-color);
+  color: var(--dark-brown-color);
   border-radius: 5px;
   border: 1px solid var(--milky-color);
 }
@@ -104,4 +104,38 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--cream-color);
   font-weight: bold;
   border-color: var(--cream-color);
+}
+
+.main-content {
+  background-color: var(--cream-color);
+  display: grid;
+  grid-template-rows: minmax(40px, 60px) minmax(500px, 1fr);
+  padding: 1em;
+}
+
+.heading {
+  color: var(--brown-color);
+  border-bottom: 1px solid var(--dark-brown-color);
+}
+
+.todo-lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: minmax(100px, 150px);
+  gap: 1em;
+  padding-top: 1em;
+  padding-left: 8px;
+}
+
+.todo-list {
+  box-shadow: -8px 0 0 var(--brown-color);
+  border-radius: 8px;
+  background-color: var(--milky-color);
+  padding: 0.5em;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--dark-brown-color);
 }
