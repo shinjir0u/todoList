@@ -44,12 +44,14 @@ h1, h2, h3, h4, h5, h6 {
 
 :root {
   --milky-color: rgb(229, 229, 203);
+  --dim-milky-color: rgb(229, 229, 203, 0.8);
   --cream-color: rgb(213, 206, 163);
   --brown-color: rgb(60, 42, 33);
+  --dim-brown-color: rgb(60, 42, 33, 0.8);
   --dark-brown-color: rgb(26, 18, 11);
 }
 
-button, input[type="text"] {
+button, input[type="text"], textarea {
   appearance: none;
 }
 
@@ -117,8 +119,9 @@ button, input[type="text"] {
 }
 
 dialog {
-  margin: 10vh auto;
   padding: 1em;
+  background-color: var(--cream-color);
+  margin: 10vh auto;
   border: 3px solid var(--dark-brown-color);
 }
 
@@ -127,11 +130,16 @@ dialog::backdrop {
   opacity: 0.8;
 }
 
-.project-dialog {
+dialog input[type="text"],
+dialog textarea {
+  border-radius: 5px;
+  border: 1px solid var(--brown-color);
+}
+
+.project-dialog-container {
   display: grid;
   grid-template-rows: minmax(30px, 40px) auto;
   gap: 1em;
-  background-color: var(--cream-color);
 }
 
 .project-add-title {
@@ -185,11 +193,11 @@ dialog::backdrop {
 }
 
 .project-delete-icon {
-  fill: var(--milky-color);
-  opacity: 0.8;
+  fill: var(--dim-milky-color);
 }
 
 .project-delete-icon.hover {
+  fill: var(--milky-color);
   margin-top: -5px;
   opacity: 1;
 }
@@ -225,6 +233,48 @@ dialog::backdrop {
 .item-add-icon:hover {
   background-color: var(--dark-brown-color);
   border: none;
+}
+
+.item-dialog-container {
+  display: grid;
+  grid-template-rows: minmax(20px, 40px) min-content;
+  gap: 1em;
+}
+
+.item-add-form {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(300px, 3fr);
+  grid-template-rows: minmax(20px, 30px) minmax(50px, 80px) repeat(2, minmax(20px, 30px));
+  gap: 0.5em;
+}
+
+.item-add-title {
+  border-bottom: 1px solid var(--dark-brown-color);
+}
+
+.item-description-field {
+  resize: none;
+}
+
+
+
+.item-dialog-buttons {
+  grid-column: span 2;
+  justify-self: end;
+}
+
+.item-dialog-button {
+  width: 80px;
+  background-color: var(--milky-color);
+  color: var(--dark-brown-color);
+  border-radius: 8px;
+  border: 1px solid var(--dark-brown-color);
+}
+
+.item-dialog-button:hover {
+  background-color: var(--dark-brown-color);
+  color: var(--cream-color);
+  font-weight: 600;
 }
 
 .todo-items {
@@ -293,10 +343,9 @@ input[type="checkbox"]:checked::before {
 
 .item-delete-icon {
   grid-area: delete;
-  fill: var(--brown-color);
-  opacity: 0.8;
+  fill: var(--dim-brown-color);
 }
 
 .item-delete-icon.hover {
-  opacity: 1;
+  fill: var(--brown-color);
 }
