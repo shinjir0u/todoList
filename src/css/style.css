@@ -49,6 +49,10 @@ h1, h2, h3, h4, h5, h6 {
   --dark-brown-color: rgb(26, 18, 11);
 }
 
+button, input[type="text"] {
+  appearance: none;
+}
+
 .container {
   height: 100vh;
   display: grid;
@@ -99,16 +103,64 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--milky-color);
 }
 
-.add-project-icon {
+.project-add-icon {
   fill: var(--dark-brown-color);
   background-color: var(--milky-color);
   border-radius: 8px;
   border: 2px solid var(--dark-brown-color);
+  padding: 1px;
 }
 
-.add-project-icon:hover {
+.project-add-icon:hover {
   border: none;
   background-color: var(--cream-color);
+}
+
+dialog {
+  margin: 10vh auto;
+  padding: 1em;
+  border: 3px solid var(--dark-brown-color);
+}
+
+dialog::backdrop {
+  background-color: var(--milky-color);
+  opacity: 0.8;
+}
+
+.project-dialog {
+  display: grid;
+  grid-template-rows: minmax(30px, 40px) auto;
+  gap: 1em;
+  background-color: var(--cream-color);
+}
+
+.project-add-title {
+  color: var(--dark-brown-color);
+}
+
+.project-add-form {
+  display: grid;
+  grid-template-columns: minmax(80px, 1fr) minmax(200px, 3fr);
+  gap: 0.5em;
+}
+
+.project-dialog-buttons {
+  grid-column: span 2;
+  justify-self: end;
+}
+
+.project-dialog-button {
+  width: 80px;
+  background-color: var(--milky-color);
+  color: var(--dark-brown-color);
+  border-radius: 8px;
+  border: 1px solid var(--dark-brown-color);
+}
+
+.project-dialog-button:hover {
+  background-color: var(--dark-brown-color);
+  color: var(--cream-color);
+  font-weight: 600;
 }
 
 .projects {
@@ -120,7 +172,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .project {
-  appearance: none;
   background-color: var(--milky-color);
   color: var(--dark-brown-color);
   border-radius: 5px;
@@ -152,9 +203,28 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
 }
 
+.heading-container {
+  display: grid;
+  grid-template-columns: minmax(500px, 1fr) minmax(25px, 30px);
+  border-bottom: 1px solid var(--dark-brown-color);
+  align-items: center;
+}
+
 .heading {
   color: var(--brown-color);
-  border-bottom: 1px solid var(--dark-brown-color);
+}
+
+.item-add-icon {
+  fill: var(--cream-color);
+  background-color: var(--brown-color);
+  border-radius: 8px;
+  padding: 1px;
+  border: 1px solid var(--cream-color);
+}
+
+.item-add-icon:hover {
+  background-color: var(--dark-brown-color);
+  border: none;
 }
 
 .todo-items {

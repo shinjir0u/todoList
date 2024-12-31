@@ -7,6 +7,18 @@
 </head>
 <body>
     <div class="container">
+        <dialog class="project-dialog" open>
+            <h2 class="project-add-title">Add project</h2>
+            <form class="project-add-form" action="#" method="dialog">
+                <label for="project-name">Name :</label>
+                <input type="text" class="project-name-field" name="project-name" id="project-name">
+
+                <div class="project-dialog-buttons">
+                    <button class="project-dialog-button" type="submit">Add</button>
+                </div>
+            </form>
+        </dialog>
+
         <div class="icons" hidden>
             <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>delete</title>
@@ -28,7 +40,7 @@
             <div class="menu-container">
                 <div class="projects-label">
                     <h2 class="projects-title">Projects</h2>
-                    <svg class="add-project-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <svg class="project-add-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>plus</title>
                         <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
                     </svg>
@@ -59,7 +71,13 @@
             </div>
         </div>
         <div class="main-content">
-            <h1 class="heading">Todo List</h1>
+            <div class="heading-container">
+                <h1 class="heading">Todo List</h1>
+                <svg class="item-add-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>plus</title>
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>
+            </div>
             <div class="todo-items">
                 <div class="todo-item">
                     <input type="checkbox">
