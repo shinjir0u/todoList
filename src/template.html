@@ -7,6 +7,16 @@
 </head>
 <body>
     <div class="container">
+        <div class="icons" hidden>
+            <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <title>delete</title>
+                <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+            </svg>
+            <svg class="delete-icon-hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <title>delete-empty</title>
+                <path d="M20.37,8.91L19.37,10.64L7.24,3.64L8.24,1.91L11.28,3.66L12.64,3.29L16.97,5.79L17.34,7.16L20.37,8.91M6,19V7H11.07L18,11V19A2,2 0 0,1 16,21H8A2,2 0 0,1 6,19Z" />
+            </svg>
+        </div>
         <div class="sidebar">
             <div class="logo-container">
                 <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -24,19 +34,34 @@
             </div>
         </div>
         <div class="main-content">
-            <h1 class="heading">Todo Lists</h1>
-            <div class="todo-lists">
-                <div class="todo-list">
-                    <p class="title">Study</p>
-                    <p class="due-date">10days</p>
+            <h1 class="heading">Todo List</h1>
+            <div class="todo-items">
+                <div class="todo-item">
+                    <input type="checkbox">
+                    <p class="item-title">Study</p>
+                    <p class="item-due-date">10days</p>                    
+                    <svg class="item-delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <title>delete</title>
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                    </svg>
                 </div>
-                <div class="todo-list">
-                    <p class="title">Play</p>
-                    <p class="due-date">1sec</p>
+                <div class="todo-item">
+                    <input type="checkbox">
+                    <p class="item-title">Play</p>
+                    <p class="item-due-date">1sec</p>
+                    <svg class="item-delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <title>delete</title>
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                    </svg>
                 </div>
-                <div class="todo-list">
-                    <p class="title">Rest</p>
-                    <p class="due-date">Never</p>
+                <div class="todo-item">
+                    <input type="checkbox" checked>
+                    <p class="item-title">Rest</p>
+                    <p class="item-due-date">Never</p>
+                    <svg class="item-delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <title>delete</title>
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                    </svg>
                 </div>
             </div>
         </div>

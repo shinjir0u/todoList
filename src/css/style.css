@@ -111,6 +111,8 @@ h1, h2, h3, h4, h5, h6 {
   display: grid;
   grid-template-rows: minmax(40px, 60px) minmax(500px, 1fr);
   padding: 1em;
+  grid-template-columns: minmax(500px, 60vw);
+  justify-content: center;
 }
 
 .heading {
@@ -118,24 +120,70 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid var(--dark-brown-color);
 }
 
-.todo-lists {
+.todo-items {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-auto-rows: minmax(100px, 150px);
-  gap: 1em;
+  grid-auto-rows: minmax(50px, 60px);
+  gap: 0.5em;
   padding-top: 1em;
   padding-left: 8px;
 }
 
-.todo-list {
+.todo-item {
   box-shadow: -8px 0 0 var(--brown-color);
   border-radius: 8px;
   background-color: var(--milky-color);
-  padding: 0.5em;
+  padding: 0.5em 1em;
+  display: grid;
+  grid-template-areas: 
+              "check title delete"
+              ". duedate .";
+  justify-items: start;
+  grid-template-columns: minmax(10px, 20px) minmax(100px, 1fr) minmax(20px,22px);
+  grid-template-rows: minmax(20px) minmax(10px);
+  align-items: center;
+  gap: 0 0.5em;
 }
 
-.title {
+input[type="checkbox"] {
+  margin: 0;
+  grid-area: check;
+  /* appearance: none;
+  color: var(--dark-brown-color);
+  width: 1.15em;
+  height: 1.15em;
+  border: 1.5px solid var(--dark-brown-color);
+  border-radius: 50%; */
+  display: grid;
+  place-content: center;
+}
+
+/* input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--dark-brown-color);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+} */
+
+.item-title {
   font-weight: bold;
   font-size: 1.2rem;
   color: var(--dark-brown-color);
+  grid-area: title;
+  margin-top: -2px;
+}
+
+.item-due-date {
+  margin-top: -5px;
+  grid-area: duedate;
+  font-size: 0.95em;
+}
+
+.item-delete-icon {
+  grid-area: delete;
 }
