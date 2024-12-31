@@ -84,12 +84,39 @@ h1, h2, h3, h4, h5, h6 {
 .menu-container {
   margin-top: 10vh;
   display: grid;
+  grid-template-rows: minmax(25px, 50px) minmax(500px, 1fr);
+  gap: 1em;
+}
+
+.projects-label {
+  display: grid;
+  grid-template-columns: minmax(100px, 3fr) minmax(10px, 30px);
+  align-items: center;
+  border-bottom: 1px solid var(--cream-color);
+}
+
+.projects-title {
+  color: var(--milky-color);
+}
+
+.add-project-icon {
+  fill: var(--dark-brown-color);
+  background-color: var(--milky-color);
+  border-radius: 8px;
+  border: 2px solid var(--dark-brown-color);
+}
+
+.add-project-icon:hover {
+  border: none;
+  background-color: var(--cream-color);
 }
 
 .projects {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
+  display: grid;
+  grid-template-columns: minmax(100px, 3fr) minmax(20px, 30px);
+  align-items: center;
+  grid-auto-rows: min-content;
+  gap: 0.5em 1em;
 }
 
 .project {
@@ -104,6 +131,16 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--cream-color);
   font-weight: bold;
   border-color: var(--cream-color);
+}
+
+.project-delete-icon {
+  fill: var(--milky-color);
+  opacity: 0.8;
+}
+
+.project-delete-icon.hover {
+  margin-top: -5px;
+  opacity: 1;
 }
 
 .main-content {
@@ -186,4 +223,10 @@ input[type="checkbox"]:checked::before {
 
 .item-delete-icon {
   grid-area: delete;
+  fill: var(--brown-color);
+  opacity: 0.8;
+}
+
+.item-delete-icon.hover {
+  opacity: 1;
 }
