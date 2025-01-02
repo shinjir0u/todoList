@@ -65,13 +65,17 @@ const createListContainer = function() {
     };
 }
 
-const createProject = function() {
+const createProject = function(name) {
+    this.projectName = name;
     const itemList = createListContainer();
+
+    const getName = () => this.projectName;
     return {
         addTodoItemFromList : itemList.addItemToList,
         removeTodoItemFromList : itemList.removeItemFromList,
         getTodoItemFromList : itemList.getItemFromList,
         getTodoItemList : itemList.getItemList,
+        getName,
     };
 }
 
@@ -85,6 +89,42 @@ const createWorkspace = function() {
     };
 }
 
+const ScreenController = function() {
+    const workspace = createWorkspace();
+    const projectsContainer = document.querySelector(".projects");
+    const projectDialog = document.querySelector(".project-dialog");
+
+    const deleteIcon = document.querySelector(".delete-icon");
+    const deleteHoverIcon = document.querySelector(".delete-icon-hover");
+    
+    projectsContainer.addEventListener("click", () => {
+        projectDialog.showModal();
+    });
+
+    const displayProjects = function() {
+        clearProjects();
+
+        workspace.forEach((project, index) => {
+            const projectElement = document.createElement("button");
+            projectElement.classList.add("project");
+            projectElement.dataset.index = index;
+            projectElement.textContent = project.getName();
+
+            const deleteIconElement = deleteIcon.cloneNode(true);
+    
+            projectsContainer.appendChild(projectElement);
+            projectsContainer.appendChild(deleteIconElement);
+        });
+    }
+
+    const clearProjects = function() {
+        projectsContainer.children.forEach(child => {
+            projectsContainer.removeChild(child);
+        });
+    }
+}
+
+ScreenController();
 /* 
 Pseudo Code
 
