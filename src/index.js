@@ -1,37 +1,37 @@
 import "./css/style.css";
 
 const createTodoItem = function(title = "", description="", dueDate="", priority="", note="") {
-    this.title = title;
-    this.description = description;
-    this.dueDate = dueDate;
-    this.priority = priority;
-    this.note = note;
+    let itemTitle = title;
+    let itemDescription = description;
+    let itemDueDate = dueDate;
+    let itemPriority = priority;
+    let itemNote = note;
 
     const setTitle = (title) => {
-        this.title = title;
+        itemTitle = title;
     }
 
     const setDescription = (description) => {
-        this.description = description;
+        itemDescription = description;
     }
 
     const setDueDate = (dueDate) => {
-        this.dueDate = dueDate;
+        itemDueDate = dueDate;
     }
 
     const setPriority = (priority) => {
-        this.priority = priority;
+        itemPriority = priority;
     }
 
     const setNote = (note) => {
-        this.note = note;
+        itemNote = note;
     }
 
-    const getTitle = () => this.title;
-    const getDescription = () => this.description;
-    const getDueDate = () => this.dueDate;
-    const getPriority = () => this.priority;
-    const getNote = () => this.note;
+    const getTitle = () => itemTitle;
+    const getDescription = () => itemDescription;
+    const getDueDate = () => itemDueDate;
+    const getPriority = () => itemPriority;
+    const getNote = () => itemNote;
 
     return {
         setTitle, setDescription, setDueDate, setPriority, setNote,
@@ -40,22 +40,22 @@ const createTodoItem = function(title = "", description="", dueDate="", priority
 };
 
 const createListContainer = function() {
-    this.itemList = [];
+    let itemList = [];
 
     const addItemToList = (item) => {
-        this.itemList.push(item);
+        itemList.push(item);
     }
 
     const removeItemFromList = (item) => {
-        const itemIndex = this.itemList.indexOf(item);
-        this.itemList.splice(itemIndex, 1);
+        const itemIndex = itemList.indexOf(item);
+        itemList.splice(itemIndex, 1);
     }
 
     const getItemFromList = (itemIndex) => {
-        return this.itemList[itemIndex];
+        return itemList[itemIndex];
     }
 
-    const getItemList = () => this.itemList;
+    const getItemList = () => itemList;
 
     return {
         addItemToList,
@@ -66,10 +66,10 @@ const createListContainer = function() {
 }
 
 const createProject = function(name) {
-    this.projectName = name;
+    let projectName = name;
     const itemList = createListContainer();
 
-    const getName = () => this.projectName;
+    const getName = () => projectName;
     return {
         addTodoItemFromList : itemList.addItemToList,
         removeTodoItemFromList : itemList.removeItemFromList,
