@@ -39,7 +39,7 @@ const createTodoItem = function(title = "", description="", dueDate="", priority
     };
 };
 
-const createListContainer = function() {
+const createListContainerController = function() {
     let itemList = [];
 
     const addItemToList = (item) => {
@@ -65,9 +65,9 @@ const createListContainer = function() {
     };
 }
 
-const createProject = function(name) {
+const createProjectController = function(name) {
     let projectName = name;
-    const itemList = createListContainer();
+    const itemList = createListContainerController();
 
     const getName = () => projectName;
     return {
@@ -79,8 +79,8 @@ const createProject = function(name) {
     };
 }
 
-const createWorkspace = function() {
-    const itemList = createListContainer();
+const createWorkspaceController = function() {
+    const itemList = createListContainerController();
     return {
         addProjectToWorkspace : itemList.addItemToList,
         removeProjectFromWorkspace : itemList.removeItemFromList,
@@ -90,27 +90,54 @@ const createWorkspace = function() {
 }
 
 const ScreenController = function() {
-    const workspace = createWorkspace();
+    const workspaceController = createWorkspaceController();
+
+    const projectAddIcon = document.querySelector(".project-add-icon");
     const projectsContainer = document.querySelector(".projects");
+
     const projectDialog = document.querySelector(".project-dialog");
+    const projectAddButton = document.querySelector(".project-dialog-button");
 
     const deleteIcon = document.querySelector(".delete-icon");
     const deleteHoverIcon = document.querySelector(".delete-icon-hover");
-    
-    projectsContainer.addEventListener("click", () => {
-        projectDialog.showModal();
-    });
+
+    const projectAddHandler = function(event) {
+        event.preventDefault();
+        const inputField = event.target.parentElement.previousElementSibling;
+        const projectName = inputField.value;
+        const newProject = createProjectController(projectName);
+
+        workspaceController.addProjectToWorkspace(newProject);
+        displayProjects();
+        projectDialog.close();
+    }
+
+    const deleteIconHoverHandler = function(event) {
+        const hoverIcon = deleteHoverIcon.cloneNode(true);
+        event.target.parentElement.replaceChild(hoverIcon, event.target);
+        hoverIcon.classList.add("project-delete-icon");
+        hoverIcon.addEventListener("mouseleave", deleteIconNoHoverHandler);
+    }
+
+    const deleteIconNoHoverHandler = function(event) {
+        const deleteIconNoHover = deleteIcon.cloneNode(true);
+        event.target.parentElement.replaceChild(deleteIconNoHover, event.target);
+        deleteIconNoHover.classList.add("project-delete-icon");
+        deleteIconNoHover.addEventListener("mouseenter", deleteIconHoverHandler);
+    }
 
     const displayProjects = function() {
         clearProjects();
 
-        workspace.forEach((project, index) => {
+        workspaceController.getWorkspace().forEach((project, index) => {
             const projectElement = document.createElement("button");
             projectElement.classList.add("project");
             projectElement.dataset.index = index;
             projectElement.textContent = project.getName();
 
             const deleteIconElement = deleteIcon.cloneNode(true);
+            deleteIconElement.classList.add("project-delete-icon");
+            deleteIconElement.addEventListener("mouseenter", deleteIconHoverHandler);
     
             projectsContainer.appendChild(projectElement);
             projectsContainer.appendChild(deleteIconElement);
@@ -118,10 +145,16 @@ const ScreenController = function() {
     }
 
     const clearProjects = function() {
-        projectsContainer.children.forEach(child => {
+        Array.from(projectsContainer.children).forEach(child => {
             projectsContainer.removeChild(child);
         });
     }
+
+    projectAddIcon.addEventListener("click", () => {
+        projectDialog.showModal();
+    });
+
+    projectAddButton.addEventListener("click", projectAddHandler);
 }
 
 ScreenController();

@@ -184,6 +184,7 @@ dialog textarea {
   color: var(--dark-brown-color);
   border-radius: 5px;
   border: 1px solid var(--milky-color);
+  cursor: pointer;
 }
 
 .project:hover {
@@ -196,9 +197,8 @@ dialog textarea {
   fill: var(--dim-milky-color);
 }
 
-.project-delete-icon.hover {
+.project-delete-icon:hover {
   fill: var(--milky-color);
-  margin-top: -5px;
   opacity: 1;
 }
 
@@ -346,6 +346,6 @@ input[type="checkbox"]:checked::before {
   fill: var(--dim-brown-color);
 }
 
-.item-delete-icon.hover {
+.item-delete-icon:hover {
   fill: var(--brown-color);
 }
