@@ -103,7 +103,7 @@ const ScreenController = function() {
     const deleteHoverIcon = document.querySelector(".delete-icon-hover");
 
     const displayProjects = function() {
-        clearProjects();
+        clearContainingElements(projectsContainer);
 
         workspaceController.getWorkspace().forEach((project, index) => {
             const projectElement = document.createElement("button");
@@ -121,13 +121,8 @@ const ScreenController = function() {
         });
     };
 
-    const clearProjects = function() {
-        Array.from(projectsContainer.children).forEach(child => {
-            projectsContainer.removeChild(child);
-        });
-    };
-
     const displayItems = function(project) {
+        clearContainingElements(todoItemsContainer);
         changeHeading(project);
 
         project.forEach((item, index) => {
@@ -148,18 +143,22 @@ const ScreenController = function() {
             const itemDeleteIcon = deleteIcon.cloneNode(true);
             itemDeleteIcon.classList.add("item-delete-icon");
 
-            itemContainer.appendChild(checkBoxElement);
-            itemContainer.appendChild(itemTitleElement);
-            itemContainer.appendChild(itemDueDateElement);
-            itemContainer.appendChild(itemDeleteIcon);
+            todoItemsContainer.appendChild(checkBoxElement);
+            todoItemsContainer.appendChild(itemTitleElement);
+            todoItemsContainer.appendChild(itemDueDateElement);
+            todoItemsContainer.appendChild(itemDeleteIcon);
         });
     };
 
-    
+
 
     const changeHeading = function(project) {
         const headingElement = document.querySelector(".heading");
         headingElement.textContent = project.getName();
+    }
+
+    const clearContainingElements = function(elementNode) {
+        elementNode.textContent = "";
     }
 
     const projectAddHandler = function(event) {
