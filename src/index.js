@@ -128,6 +128,7 @@ const ScreenController = function() {
         project.forEach((item, index) => {
             const itemContainer = document.createElement("div");
             itemContainer.classList.add("todo-item");
+            itemContainer.dataset.index = index;
 
             const checkBoxElement = document.createElement("input");
             checkBoxElement.type = "checkbox";
@@ -149,8 +150,6 @@ const ScreenController = function() {
             todoItemsContainer.appendChild(itemDeleteIcon);
         });
     };
-
-
 
     const changeHeading = function(project) {
         const headingElement = document.querySelector(".heading");
