@@ -97,6 +97,8 @@ const ScreenController = function() {
     const projectDialog = document.querySelector(".project-dialog");
     const projectAddButton = document.querySelector(".project-dialog-button");
 
+    const todoItemsContainer = document.querySelector(".todo-items");
+
     const deleteIcon = document.querySelector(".delete-icon");
     const deleteHoverIcon = document.querySelector(".delete-icon-hover");
 
@@ -124,6 +126,41 @@ const ScreenController = function() {
             projectsContainer.removeChild(child);
         });
     };
+
+    const displayItems = function(project) {
+        changeHeading(project);
+
+        project.forEach((item, index) => {
+            const itemContainer = document.createElement("div");
+            itemContainer.classList.add("todo-item");
+
+            const checkBoxElement = document.createElement("input");
+            checkBoxElement.type = "checkbox";
+            
+            const itemTitleElement = document.createElement("p");
+            itemTitleElement.classList.add("item-title");
+            itemTitleElement.textContent = item.getTitle();
+
+            const itemDueDateElement = document.createElement("p");
+            itemDueDateElement.classList.add("item-due-date");
+            itemDueDateElement.textContent = item.getDueDate();
+
+            const itemDeleteIcon = deleteIcon.cloneNode(true);
+            itemDeleteIcon.classList.add("item-delete-icon");
+
+            itemContainer.appendChild(checkBoxElement);
+            itemContainer.appendChild(itemTitleElement);
+            itemContainer.appendChild(itemDueDateElement);
+            itemContainer.appendChild(itemDeleteIcon);
+        });
+    };
+
+    
+
+    const changeHeading = function(project) {
+        const headingElement = document.querySelector(".heading");
+        headingElement.textContent = project.getName();
+    }
 
     const projectAddHandler = function(event) {
         event.preventDefault();
