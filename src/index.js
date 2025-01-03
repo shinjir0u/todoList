@@ -129,9 +129,12 @@ const ScreenController = function() {
         event.preventDefault();
         const inputField = event.target.parentElement.previousElementSibling;
         const projectName = inputField.value;
-        const newProject = createProjectController(projectName);
 
-        workspaceController.addProjectToWorkspace(newProject);
+        if (projectName) {
+            const newProject = createProjectController(projectName);
+
+            workspaceController.addProjectToWorkspace(newProject);
+        }
         displayProjects();
         projectDialog.close();
     };
