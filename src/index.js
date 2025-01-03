@@ -143,6 +143,7 @@ const ScreenController = function() {
 
             const itemDeleteIcon = deleteIcon.cloneNode(true);
             itemDeleteIcon.classList.add("item-delete-icon");
+            itemDeleteIcon.addEventListener("mouseenter", deleteIconHoverHandler);
 
             todoItemsContainer.appendChild(checkBoxElement);
             todoItemsContainer.appendChild(itemTitleElement);
