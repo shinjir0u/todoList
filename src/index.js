@@ -39,7 +39,7 @@ const createTodoItem = function(title = "", description="", dueDate="", priority
     };
 };
 
-const createListContainerController = function() {
+const createListContainer = function() {
     let itemList = [];
 
     const addItemToList = (item) => {
@@ -64,40 +64,43 @@ const createListContainerController = function() {
     };
 }
 
-const createProjectController = function(name) {
+const createProject = function(name) {
     let projectName = name;
-    const itemList = createListContainerController();
+    const itemList = createListContainer();
 
     const getProjectName = () => projectName;
     return {
-        addTodoItemFromProject : itemList.addItemToList,
+        addTodoItemToProject : itemList.addItemToList,
         removeTodoItemFromProject : itemList.removeItemFromList,
         getTodoItemFromProject : itemList.getItemFromList,
-        getProject : itemList.getItemList,
+        getTodoItems : itemList.getItemList,
         getProjectName,
     };
 }
 
-const createWorkspaceController = function() {
-    const itemList = createListContainerController();
+const createWorkspace = function() {
+    const itemList = createListContainer();
     return {
         addProjectToWorkspace : itemList.addItemToList,
         removeProjectFromWorkspace : itemList.removeItemFromList,
         getProjectFromWorkspace : itemList.getItemFromList,
-        getWorkspace : itemList.getItemList,
+        getProjects : itemList.getItemList,
     };
 }
 
 const ScreenController = function() {
-    const workspaceController = createWorkspaceController();
+    const workspace = createWorkspace();
+    let currentProject = "defaultProject"; 
 
     const projectAddIcon = document.querySelector(".project-add-icon");
     const projectsContainer = document.querySelector(".projects");
-
     const projectDialog = document.querySelector(".project-dialog");
     const projectAddButton = document.querySelector(".project-dialog-button");
 
     const todoItemsContainer = document.querySelector(".todo-items");
+    const todoItemAddIcon = document.querySelector(".item-add-icon");
+    const itemDialog = document.querySelector(".item-dialog");
+    const todoItemAddButton = document.querySelector(".item-dialog-button");
 
     const deleteIcon = document.querySelector(".delete-icon");
     const deleteHoverIcon = document.querySelector(".delete-icon-hover");
@@ -105,7 +108,7 @@ const ScreenController = function() {
     const displayProjects = function() {
         clearContainingElements(projectsContainer);
 
-        workspaceController.getWorkspace().forEach((project, index) => {
+        workspace.getProjects().forEach((project, index) => {
             const projectElement = document.createElement("button");
             projectElement.classList.add("project");
             projectElement.dataset.index = index;
@@ -122,11 +125,11 @@ const ScreenController = function() {
         });
     };
 
-    const displayItems = function(projectController) {
+    const displayItems = function(project) {
         clearContainingElements(todoItemsContainer);
-        changeHeading(projectController);
+        changeHeading(project);
 
-        projectController.getProject().forEach((item, index) => {
+        project.getTodoItems().forEach((item, index) => {
             const itemContainer = document.createElement("div");
             itemContainer.classList.add("todo-item");
             itemContainer.dataset.index = index;
@@ -146,16 +149,17 @@ const ScreenController = function() {
             itemDeleteIcon.classList.add("item-delete-icon");
             itemDeleteIcon.addEventListener("mouseenter", deleteIconHoverHandler);
 
-            todoItemsContainer.appendChild(checkBoxElement);
-            todoItemsContainer.appendChild(itemTitleElement);
-            todoItemsContainer.appendChild(itemDueDateElement);
-            todoItemsContainer.appendChild(itemDeleteIcon);
+            todoItemsContainer.appendChild(itemContainer);
+            itemContainer.appendChild(checkBoxElement);
+            itemContainer.appendChild(itemTitleElement);
+            itemContainer.appendChild(itemDueDateElement);
+            itemContainer.appendChild(itemDeleteIcon);
         });
     };
 
-    const changeHeading = function(projectController) {
+    const changeHeading = function(project) {
         const headingElement = document.querySelector(".heading");
-        headingElement.textContent = projectController.getProjectName();
+        headingElement.textContent = project.getProjectName();
     }
 
     const clearContainingElements = function(elementNode) {
@@ -168,9 +172,9 @@ const ScreenController = function() {
         const projectName = inputField.value;
 
         if (projectName) {
-            const newProject = createProjectController(projectName);
+            const newProject = createProject(projectName);
 
-            workspaceController.addProjectToWorkspace(newProject);
+            workspace.addProjectToWorkspace(newProject);
         }
         displayProjects();
         projectDialog.close();
@@ -193,21 +197,46 @@ const ScreenController = function() {
 
     const projectSelectHandler = function(event) {
         const projectIndex = event.target.dataset.index;
-        displayItems(workspaceController.getProjectFromWorkspace(projectIndex));
+        currentProject = workspace.getProjectFromWorkspace(projectIndex);
+        displayItems(currentProject);
     };
 
     const deleteProjectHandler = function(event) {
         const projectElement = event.target.previousElementSibling;
         const projectIndex = projectElement.dataset.index;
-        workspaceController.removeProjectFromWorkspace(projectIndex);
+        workspace.removeProjectFromWorkspace(projectIndex);
         displayProjects();
     };
+
+    const todoItemAddHandler = function(event) {
+        const todoItemForm = event.target.parentElement.parentElement;
+        const inputItems = getInputFieldsInsideForm(todoItemForm);
+
+        const [ itemTitleValue, itemDescriptionValue, itemDueDateValue, itemPriorityValue ] = inputItems.map(item => item.value);
+        
+        const todoItem = createTodoItem(itemTitleValue, itemDescriptionValue, 
+                            itemDueDateValue, itemPriorityValue);
+        currentProject.addTodoItemToProject(todoItem);
+        displayItems(currentProject);
+    }
+
+    const getInputFieldsInsideForm = function(form) {
+        return Array.from(form.children).filter(child => child.nodeName === "INPUT" 
+                                        | child.nodeName==="SELECT" 
+                                        | child.nodeName==="TEXTAREA");
+    }
 
     projectAddIcon.addEventListener("click", () => {
         projectDialog.showModal();
     });
 
     projectAddButton.addEventListener("click", projectAddHandler);
+
+    todoItemAddIcon.addEventListener("click", () => {
+        itemDialog.showModal();
+    });
+
+    todoItemAddButton.addEventListener("click", todoItemAddHandler);
 }
 
 ScreenController();
