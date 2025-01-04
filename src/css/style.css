@@ -171,12 +171,22 @@ dialog textarea {
   font-weight: 600;
 }
 
-.projects {
+.projects,
+.default-projects {
   display: grid;
-  grid-template-columns: minmax(100px, 3fr) minmax(20px, 30px);
   align-items: center;
   grid-auto-rows: min-content;
   gap: 0.5em 1em;
+}
+
+.default-projects {
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid var(--cream-color);
+}
+
+.projects {
+  grid-template-columns: minmax(100px, 3fr) minmax(20px, 30px);
 }
 
 .project {

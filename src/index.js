@@ -62,7 +62,7 @@ const createListContainer = function() {
         getItemFromList,
         getItemList,
     };
-}
+};
 
 const createProject = function(name) {
     let projectName = name;
@@ -76,7 +76,7 @@ const createProject = function(name) {
         getTodoItems : itemList.getItemList,
         getProjectName,
     };
-}
+};
 
 const createWorkspace = function() {
     const itemList = createListContainer();
@@ -86,16 +86,38 @@ const createWorkspace = function() {
         getProjectFromWorkspace : itemList.getItemFromList,
         getProjects : itemList.getItemList,
     };
-}
+};
+
+const createDefaultWorkspace = function() {
+    const itemList = [];
+    const defaultProject = createProject("DEFAULT");
+    const completedProject = createProject("COMPLETED");
+
+    itemList.push(defaultProject, completedProject);
+
+    const getProjectFromDefaultWorkspace = function(index) {
+        return itemList[index];
+    };
+
+    return {
+        getDefaultProjects : () => itemList,
+        getDefaultProject : () => defaultProject,
+        getCompletedProject : () => completedProject,
+        getProjectFromDefaultWorkspace,
+    };
+};
 
 const ScreenController = function() {
     const workspace = createWorkspace();
-    let currentProject = "defaultProject"; 
+    const defaultWorkspace = createDefaultWorkspace();
+    let currentProject = defaultWorkspace.getDefaultProject(); 
 
     const projectAddIcon = document.querySelector(".project-add-icon");
     const projectsContainer = document.querySelector(".projects");
     const projectDialog = document.querySelector(".project-dialog");
     const projectAddButton = document.querySelector(".project-dialog-button");
+
+    const defaultProjectsContainer = document.querySelector(".default-projects");
 
     const todoItemsContainer = document.querySelector(".todo-items");
     const todoItemAddIcon = document.querySelector(".item-add-icon");
@@ -104,6 +126,19 @@ const ScreenController = function() {
 
     const deleteIcon = document.querySelector(".delete-icon");
     const deleteHoverIcon = document.querySelector(".delete-icon-hover");
+
+    const displayDefaultProjects = function() {
+        defaultWorkspace.getDefaultProjects().forEach((project, index) => {
+            const projectElement = document.createElement("button");
+            projectElement.classList.add("project");
+            projectElement.dataset.index = index;
+            projectElement.textContent = project.getProjectName();
+
+            projectElement.addEventListener("click", defaultProjectSelectHandler);
+            
+            defaultProjectsContainer.appendChild(projectElement);
+        });
+    };
 
     const displayProjects = function() {
         clearContainingElements(projectsContainer);
@@ -208,6 +243,12 @@ const ScreenController = function() {
         displayProjects();
     };
 
+    const defaultProjectSelectHandler = function(event) {
+        const projectIndex = event.target.dataset.index;
+        currentProject = defaultWorkspace.getProjectFromDefaultWorkspace(projectIndex);
+        displayItems(currentProject);
+    }
+
     const itemDeleteIconHoverHandler = function(event) {
         const deleteHoverIconElement = deleteHoverIcon.cloneNode(true);
         event.target.parentElement.replaceChild(deleteHoverIconElement, event.target);
@@ -247,6 +288,9 @@ const ScreenController = function() {
                                         | child.nodeName==="SELECT" 
                                         | child.nodeName==="TEXTAREA");
     }
+
+    displayDefaultProjects();
+    displayItems(currentProject);
 
     projectAddIcon.addEventListener("click", () => {
         projectDialog.showModal();
