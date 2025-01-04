@@ -118,7 +118,7 @@ const ScreenController = function() {
             deleteIconElement.classList.add("project-delete-icon");
 
             projectElement.addEventListener("click", projectSelectHandler);
-            deleteIconElement.addEventListener("mouseenter", deleteIconHoverHandler);
+            deleteIconElement.addEventListener("mouseenter", projectDeleteIconHoverHandler);
     
             projectsContainer.appendChild(projectElement);
             projectsContainer.appendChild(deleteIconElement);
@@ -147,7 +147,7 @@ const ScreenController = function() {
 
             const itemDeleteIcon = deleteIcon.cloneNode(true);
             itemDeleteIcon.classList.add("item-delete-icon");
-            itemDeleteIcon.addEventListener("mouseenter", deleteIconHoverHandler);
+            itemDeleteIcon.addEventListener("mouseenter", itemDeleteIconHoverHandler);
 
             todoItemsContainer.appendChild(itemContainer);
             itemContainer.appendChild(checkBoxElement);
@@ -180,19 +180,19 @@ const ScreenController = function() {
         projectDialog.close();
     };
 
-    const deleteIconHoverHandler = function(event) {
+    const projectDeleteIconHoverHandler = function(event) {
         const deleteHoverIconElement = deleteHoverIcon.cloneNode(true);
         event.target.parentElement.replaceChild(deleteHoverIconElement, event.target);
         deleteHoverIconElement.classList.add("project-delete-icon");
         deleteHoverIconElement.addEventListener("click", deleteProjectHandler);
-        deleteHoverIconElement.addEventListener("mouseleave", deleteIconNoHoverHandler);
+        deleteHoverIconElement.addEventListener("mouseleave", projectDeleteIconNoHoverHandler);
     };
 
-    const deleteIconNoHoverHandler = function(event) {
+    const projectDeleteIconNoHoverHandler = function(event) {
         const deleteIconNoHover = deleteIcon.cloneNode(true);
         event.target.parentElement.replaceChild(deleteIconNoHover, event.target);
         deleteIconNoHover.classList.add("project-delete-icon");
-        deleteIconNoHover.addEventListener("mouseenter", deleteIconHoverHandler);
+        deleteIconNoHover.addEventListener("mouseenter", projectDeleteIconHoverHandler);
     };
 
     const projectSelectHandler = function(event) {
@@ -207,6 +207,28 @@ const ScreenController = function() {
         workspace.removeProjectFromWorkspace(projectIndex);
         displayProjects();
     };
+
+    const itemDeleteIconHoverHandler = function(event) {
+        const deleteHoverIconElement = deleteHoverIcon.cloneNode(true);
+        event.target.parentElement.replaceChild(deleteHoverIconElement, event.target);
+        deleteHoverIconElement.classList.add("item-delete-icon");
+        deleteHoverIconElement.addEventListener("click", deleteItemHandler);
+        deleteHoverIconElement.addEventListener("mouseleave", itemDeleteIconNoHoverHandler);
+    }
+
+    const itemDeleteIconNoHoverHandler = function(event) {
+        const deleteIconNoHover = deleteIcon.cloneNode(true);
+        event.target.parentElement.replaceChild(deleteIconNoHover, event.target);
+        deleteIconNoHover.classList.add("item-delete-icon");
+        deleteIconNoHover.addEventListener("mouseenter", itemDeleteIconHoverHandler);
+    }
+
+    const deleteItemHandler = function(event) {
+        const itemElement = event.target.parentElement;
+        const itemIndex = itemElement.dataset.index;
+        currentProject.removeTodoItemFromProject(itemIndex);
+        displayItems(currentProject);
+    }
 
     const todoItemAddHandler = function(event) {
         const todoItemForm = event.target.parentElement.parentElement;
