@@ -63,8 +63,11 @@ const ScreenController = function() {
             itemContainer.classList.add("todo-item");
             itemContainer.dataset.index = index;
 
+            const checkBoxLabel = document.createElement("label");
+            checkBoxLabel.classList.add("checkbox-label");
             const checkBoxElement = document.createElement("input");
             checkBoxElement.type = "checkbox";
+            checkBoxLabel.appendChild(checkBoxElement);
             
             const itemTitleElement = document.createElement("p");
             itemTitleElement.classList.add("item-title");
@@ -79,7 +82,7 @@ const ScreenController = function() {
             itemDeleteIcon.addEventListener("mouseenter", deleteIconHoverHandler);
 
             todoItemsContainer.appendChild(itemContainer);
-            itemContainer.appendChild(checkBoxElement);
+            itemContainer.appendChild(checkBoxLabel);
             itemContainer.appendChild(itemTitleElement);
             itemContainer.appendChild(itemDueDateElement);
             itemContainer.appendChild(itemDeleteIcon);
