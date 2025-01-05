@@ -56,6 +56,7 @@ const ScreenController = function() {
     const displayItems = function(project) {
         clearContainingElements(todoItemsContainer);
         changeHeading(project);
+        disableIconIfNeeded(project);
 
         project.getTodoItems().forEach((item, index) => {
             const itemContainer = document.createElement("div");
@@ -88,6 +89,16 @@ const ScreenController = function() {
     const changeHeading = function(project) {
         const headingElement = document.querySelector(".heading");
         headingElement.textContent = project.getProjectName();
+    }
+
+    const disableIconIfNeeded = function (project) {
+        const projectName = project.getProjectName();
+        todoItemAddIcon.classList.remove("disabled");
+        todoItemAddIcon.addEventListener("click", showItemDialog);
+        if (projectName === "COMPLETED") {
+            todoItemAddIcon.classList.add("disabled");
+            todoItemAddIcon.removeEventListener("click", showItemDialog);
+        }
     }
 
     const clearContainingElements = function(elementNode) {
@@ -175,6 +186,14 @@ const ScreenController = function() {
         displayItems(currentProject);
     }
 
+    const showProjectDialog = function () {
+        projectDialog.showModal();
+    }
+
+    const showItemDialog = function () {
+        itemDialog.showModal();
+    }
+
     const getInputFieldsInsideForm = function(form) {
         return Array.from(form.children).filter(child => child.nodeName === "INPUT" 
                                         | child.nodeName==="SELECT" 
@@ -184,15 +203,11 @@ const ScreenController = function() {
     displayDefaultProjects();
     displayItems(currentProject);
 
-    projectAddIcon.addEventListener("click", () => {
-        projectDialog.showModal();
-    });
+    projectAddIcon.addEventListener("click", showProjectDialog);
 
     projectAddButton.addEventListener("click", projectAddHandler);
 
-    todoItemAddIcon.addEventListener("click", () => {
-        itemDialog.showModal();
-    });
+    todoItemAddIcon.addEventListener("click", showItemDialog);
 
     todoItemAddButton.addEventListener("click", todoItemAddHandler);
 }

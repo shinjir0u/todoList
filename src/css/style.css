@@ -245,6 +245,15 @@ dialog textarea {
   border: none;
 }
 
+.item-add-icon.disabled {
+  opacity: 0.7;
+}
+
+.item-add-icon.disabled:hover {
+  background-color: var(--brown-color);
+  border: 1px solid var(--cream-color);
+}
+
 .item-dialog-container {
   display: grid;
   grid-template-rows: minmax(20px, 40px) min-content;
