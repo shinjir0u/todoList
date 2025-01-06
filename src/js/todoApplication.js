@@ -1,4 +1,4 @@
-const createTodoItem = function(title = "", description="", dueDate="", priority="", note="") {
+const createTodoItem = function({title = "", description="", dueDate="", priority="", note=""} = {}) {
     let itemTitle = title;
     let itemDescription = description;
     let itemDueDate = dueDate;

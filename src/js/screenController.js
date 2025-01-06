@@ -98,9 +98,11 @@ const ScreenController = function() {
         const projectName = project.getProjectName();
         todoItemAddIcon.classList.remove("disabled");
         todoItemAddIcon.addEventListener("click", showItemDialog);
+        todoItemAddIcon.style.cursor = 'pointer';
         if (projectName === "COMPLETED") {
             todoItemAddIcon.classList.add("disabled");
             todoItemAddIcon.removeEventListener("click", showItemDialog);
+            todoItemAddIcon.style.cursor = 'default';
         }
     }
 
@@ -181,10 +183,15 @@ const ScreenController = function() {
         const todoItemForm = event.target.parentElement.parentElement;
         const inputItems = getInputFieldsInsideForm(todoItemForm);
 
-        const [ itemTitleValue, itemDescriptionValue, itemDueDateValue, itemPriorityValue ] = inputItems.map(item => item.value);
+        const [ itemTitleValue, itemDescriptionValue, itemDueDateValue, itemPriorityValue, itemNoteValue ] = inputItems.map(item => item.value);
         
-        const todoItem = createTodoItem(itemTitleValue, itemDescriptionValue, 
-                            itemDueDateValue, itemPriorityValue);
+        const todoItem = createTodoItem({
+            title: itemTitleValue,
+            description: itemDescriptionValue, 
+            dueDate: itemDueDateValue,
+            priority: itemPriorityValue,
+            note: itemNoteValue,
+        });
         currentProject.addTodoItemToProject(todoItem);
         displayItems(currentProject);
     }
