@@ -3,7 +3,9 @@
   https://www.joshwcomeau.com/css/custom-css-reset/
 */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -16,27 +18,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
 p {
   text-wrap: pretty;
 }
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
 
-#root, #__next {
+#root,
+#__next {
   isolation: isolate;
 }
 
@@ -51,7 +72,9 @@ h1, h2, h3, h4, h5, h6 {
   --dark-brown-color: rgb(26, 18, 11);
 }
 
-button, input[type="text"], textarea {
+button,
+input[type="text"],
+textarea {
   appearance: none;
 }
 
@@ -302,7 +325,10 @@ dialog textarea {
 .item-add-form {
   display: grid;
   grid-template-columns: minmax(150px, 1fr) minmax(300px, 3fr);
-  grid-template-rows: minmax(20px, 30px) minmax(50px, 80px) repeat(2, minmax(20px, 30px));
+  grid-template-rows: minmax(20px, 30px) minmax(50px, 80px) repeat(
+      2,
+      minmax(20px, 30px)
+    );
   gap: 0.5em;
 }
 
@@ -313,8 +339,6 @@ dialog textarea {
 .item-description-field {
   resize: none;
 }
-
-
 
 .item-dialog-buttons {
   grid-column: span 2;
@@ -349,11 +373,14 @@ dialog textarea {
   background-color: var(--milky-color);
   padding: 0.5em 1em;
   display: grid;
-  grid-template-areas: 
-              "check title delete"
-              ". duedate .";
+  grid-template-areas:
+    "check title delete"
+    ". duedate .";
   justify-items: start;
-  grid-template-columns: minmax(10px, 20px) minmax(100px, 1fr) minmax(20px,22px);
+  grid-template-columns: minmax(10px, 20px) minmax(100px, 1fr) minmax(
+      20px,
+      22px
+    );
   grid-template-rows: minmax(20px) minmax(10px);
   align-items: center;
   gap: 0 0.5em;

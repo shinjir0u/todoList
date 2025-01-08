@@ -1,108 +1,123 @@
-const createTodoItem = function({title = "", description="", dueDate="", priority="", note=""} = {}) {
-    let itemTitle = title;
-    let itemDescription = description;
-    let itemDueDate = dueDate;
-    let itemPriority = priority;
-    let itemNote = note;
+const createTodoItem = function TodoItem({
+  title = "",
+  description = "",
+  dueDate = "",
+  priority = "",
+  note = "",
+} = {}) {
+  let itemTitle = title;
+  let itemDescription = description;
+  let itemDueDate = dueDate;
+  let itemPriority = priority;
+  let itemNote = note;
 
-    const setTitle = (title) => {
-        itemTitle = title;
-    };
+  const setTitle = (titleValue) => {
+    itemTitle = titleValue;
+  };
 
-    const setDescription = (description) => {
-        itemDescription = description;
-    };
+  const setDescription = (descriptionValue) => {
+    itemDescription = descriptionValue;
+  };
 
-    const setDueDate = (dueDate) => {
-        itemDueDate = dueDate;
-    };
+  const setDueDate = (dueDateValue) => {
+    itemDueDate = dueDateValue;
+  };
 
-    const setPriority = (priority) => {
-        itemPriority = priority;
-    };
+  const setPriority = (priorityValue) => {
+    itemPriority = priorityValue;
+  };
 
-    const setNote = (note) => {
-        itemNote = note;
-    };
+  const setNote = (noteValue) => {
+    itemNote = noteValue;
+  };
 
-    const getTitle = () => itemTitle;
-    const getDescription = () => itemDescription;
-    const getDueDate = () => itemDueDate;
-    const getPriority = () => itemPriority;
-    const getNote = () => itemNote;
+  const getTitle = () => itemTitle;
+  const getDescription = () => itemDescription;
+  const getDueDate = () => itemDueDate;
+  const getPriority = () => itemPriority;
+  const getNote = () => itemNote;
 
-    return {
-        setTitle, setDescription, setDueDate, setPriority, setNote,
-        getTitle, getDescription, getDueDate, getPriority, getNote,
-    };
+  return {
+    setTitle,
+    setDescription,
+    setDueDate,
+    setPriority,
+    setNote,
+    getTitle,
+    getDescription,
+    getDueDate,
+    getPriority,
+    getNote,
+  };
 };
 
-const createListContainer = function() {
-    let itemList = [];
+const createListContainer = function ListContainer() {
+  const itemList = [];
 
-    const addItemToList = (item) => {
-        itemList.push(item);
-    };
+  const addItemToList = (item) => {
+    itemList.push(item);
+  };
 
-    const removeItemFromList = (itemIndex) => {
-        itemList.splice(itemIndex, 1);
-    };
+  const removeItemFromList = (itemIndex) => {
+    itemList.splice(itemIndex, 1);
+  };
 
-    const getItemFromList = (itemIndex) => {
-        return itemList[itemIndex];
-    };
+  const getItemFromList = (itemIndex) => itemList[itemIndex];
 
-    const getItemList = () => itemList;
+  const getItemList = () => itemList;
 
-    return {
-        addItemToList,
-        removeItemFromList,
-        getItemFromList,
-        getItemList,
-    };
+  return {
+    addItemToList,
+    removeItemFromList,
+    getItemFromList,
+    getItemList,
+  };
 };
 
-const createProject = function(name) {
-    let projectName = name;
-    const itemList = createListContainer();
+const createProject = function Project(name) {
+  const projectName = name;
+  const itemList = createListContainer();
 
-    const getProjectName = () => projectName;
-    return {
-        addTodoItemToProject : itemList.addItemToList,
-        removeTodoItemFromProject : itemList.removeItemFromList,
-        getTodoItemFromProject : itemList.getItemFromList,
-        getTodoItems : itemList.getItemList,
-        getProjectName,
-    };
+  const getProjectName = () => projectName;
+  return {
+    addTodoItem: itemList.addItemToList,
+    removeTodoItem: itemList.removeItemFromList,
+    getTodoItem: itemList.getItemFromList,
+    getTodoItems: itemList.getItemList,
+    getProjectName,
+  };
 };
 
-const createWorkspace = function() {
-    const itemList = createListContainer();
-    return {
-        addProjectToWorkspace : itemList.addItemToList,
-        removeProjectFromWorkspace : itemList.removeItemFromList,
-        getProjectFromWorkspace : itemList.getItemFromList,
-        getProjects : itemList.getItemList,
-    };
+const createWorkspace = function Workspace() {
+  const itemList = createListContainer();
+  return {
+    addProject: itemList.addItemToList,
+    removeProject: itemList.removeItemFromList,
+    getProject: itemList.getItemFromList,
+    getProjects: itemList.getItemList,
+  };
 };
 
-const createDefaultWorkspace = function() {
-    const itemList = [];
-    const defaultProject = createProject("DEFAULT");
-    const completedProject = createProject("COMPLETED");
+const createDefaultWorkspace = function DefaultWorkspace() {
+  const itemList = [];
+  const defaultProject = createProject("DEFAULT");
+  const completedProject = createProject("COMPLETED");
 
-    itemList.push(defaultProject, completedProject);
+  itemList.push(defaultProject, completedProject);
 
-    const getProjectFromDefaultWorkspace = function(index) {
-        return itemList[index];
-    };
+  const getProject = (index) => itemList[index];
 
-    return {
-        getDefaultProjects : () => itemList,
-        getDefaultProject : () => defaultProject,
-        getCompletedProject : () => completedProject,
-        getProjectFromDefaultWorkspace,
-    };
+  return {
+    getDefaultProjects: () => itemList,
+    getDefaultProject: () => defaultProject,
+    getCompletedProject: () => completedProject,
+    getProject,
+  };
 };
 
-export { createTodoItem, createProject, createDefaultWorkspace, createWorkspace };
+export {
+  createTodoItem,
+  createProject,
+  createDefaultWorkspace,
+  createWorkspace,
+};
