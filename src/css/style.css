@@ -70,6 +70,7 @@ h6 {
   --brown-color: rgb(60, 42, 33);
   --dim-brown-color: rgb(60, 42, 33, 0.8);
   --dark-brown-color: rgb(26, 18, 11);
+  --required-red-color: rgb(204, 37, 37);
 }
 
 button,
@@ -197,6 +198,11 @@ dialog textarea {
   border: 1px solid var(--brown-color);
 }
 
+dialog input[type="text"].invalid,
+dialog textarea.invalid {
+  border: 2px solid var(--required-red-color);
+}
+
 .project-dialog-container {
   display: grid;
   grid-template-rows: minmax(30px, 40px) auto;
@@ -216,6 +222,10 @@ dialog textarea {
 .project-dialog-buttons {
   grid-column: span 2;
   justify-self: end;
+}
+
+.required {
+  color: var(--required-red-color);
 }
 
 .project-dialog-button {

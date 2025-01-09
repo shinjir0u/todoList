@@ -11,12 +11,13 @@
         <div class="project-dialog-container">
           <h2 class="project-add-title">Add project</h2>
           <form class="project-add-form" action="#" method="dialog">
-            <label for="project-name">Name :</label>
+            <label for="project-name">Name : <span class="required" aria-describedby="required">*</span></label>
             <input
               type="text"
               class="project-name-field"
               name="project-name"
               id="project-name"
+              required
             />
 
             <div class="project-dialog-buttons">
@@ -35,6 +36,7 @@
               class="item-title-field"
               name="item-title"
               id="item-title"
+              required
             />
 
             <label for="item-description">Description :</label>
@@ -42,6 +44,7 @@
               class="item-description-field"
               name="item-description"
               id="item-description"
+              required
             ></textarea>
 
             <label for="item-due-date">Due Date :</label>

@@ -14,36 +14,34 @@ const ScreenController = function DisplayInteractions() {
 
   const defaultProjectsElement = document.querySelector(".default-projects");
   const projectsElement = document.querySelector(".projects");
-  const projectsContainerElement = document.querySelector(
-    ".projects-container",
-  );
   const projectAddIcon = document.querySelector(".project-add-icon");
   const projectAddButton = document.querySelector(".project-dialog-button");
   const projectDialog = document.querySelector(".project-dialog");
+  const projectDialogForm = document.querySelector(".project-add-form");
 
   const itemAddIcon = document.querySelector(".item-add-icon");
   const todoItemsContainerElement = document.querySelector(".todo-items");
-  const itemDialog = document.querySelector(".item-dialog");
   const todoItemAddButton = document.querySelector(".item-dialog-button");
+  const itemDialog = document.querySelector(".item-dialog");
+  const itemDialogForm = document.querySelector(".item-add-form");
 
   const deleteIconNoHoverHandlerFactory =
     function GenerateDeleteIconNoHoverHandler(parentType) {
       return function handleIconNoHover(event) {
-        const iconState = event.target.dataset.state;
+        const deleteIconElement = deleteIcon.cloneNode(true);
+        event.target.parentElement.replaceChild(
+          deleteIconElement,
+          event.target,
+        );
+        deleteIconElement.classList.add(`${parentType}-delete-icon`);
 
-        if (iconState === "hover") {
-          const deleteIconElement = deleteIcon.cloneNode(true);
-          event.target.parentElement.replaceChild(
-            deleteIconElement,
-            event.target,
-          );
-          deleteIconElement.classList.add(`${parentType}-delete-icon`);
-          deleteIconElement.dataset.state = "default";
-
+        const deleteIconHoverHandler =
           // eslint-disable-next-line no-use-before-define
-          const deleteIconHoverHandler = deleteIconHoverHandlerFactory(parentType);
-          deleteIconElement.addEventListener("mouseenter", deleteIconHoverHandler);
-        }
+          deleteIconHoverHandlerFactory(parentType);
+        deleteIconElement.addEventListener(
+          "mouseenter",
+          deleteIconHoverHandler,
+        );
       };
     };
 
@@ -51,38 +49,44 @@ const ScreenController = function DisplayInteractions() {
     parentType,
   ) {
     return function handleIconHover(event) {
-      const iconState = event.target.dataset.state;
+      const deleteHoverIconElement = deleteHoverIcon.cloneNode(true);
+      event.target.parentElement.replaceChild(
+        deleteHoverIconElement,
+        event.target,
+      );
+      deleteHoverIconElement.classList.add(`${parentType}-delete-icon`);
 
-      if (iconState === "default") {
-        const deleteHoverIconElement = deleteHoverIcon.cloneNode(true);
-        event.target.parentElement.replaceChild(
-          deleteHoverIconElement,
-          event.target,
-        );
-        deleteHoverIconElement.classList.add(`${parentType}-delete-icon`);
-        deleteHoverIconElement.dataset.state = "hover";
-        
-        const deleteIconNoHoverHandler = deleteIconNoHoverHandlerFactory(parentType);
-        deleteHoverIconElement.addEventListener("mouseleave", deleteIconNoHoverHandler);
-      }
+      const deleteIconNoHoverHandler =
+        deleteIconNoHoverHandlerFactory(parentType);
+      deleteHoverIconElement.addEventListener(
+        "mouseleave",
+        deleteIconNoHoverHandler,
+      );
+      deleteHoverIconElement.style.cursor = "pointer";
+
+      let callBackFunction;
+      if (parentType === "project") {
+        // eslint-disable-next-line no-use-before-define
+        callBackFunction = deleteProjectHandler;
+        // eslint-disable-next-line no-use-before-define
+      } else if (parentType === "item") callBackFunction = deleteItemHandler;
+      deleteHoverIconElement.addEventListener("click", callBackFunction);
     };
   };
 
   const projectDeleteIconHoverHandler =
     deleteIconHoverHandlerFactory("project");
-  const addProjectDeleteIconHover = function projectDeleteIconHoverEvent(iconElement) {
-    iconElement.addEventListener(
-      "mouseenter",
-      projectDeleteIconHoverHandler,
-    );
+  const addProjectDeleteIconHover = function projectDeleteIconHoverEvent(
+    iconElement,
+  ) {
+    iconElement.addEventListener("mouseenter", projectDeleteIconHoverHandler);
   };
 
   const todoItemDeleteIconHoverHandler = deleteIconHoverHandlerFactory("item");
-  const addItemDeleteIconHover = function itemDeleteIconHoverEvent(iconElement) {
-    iconElement.addEventListener(
-      "mouseenter",
-      todoItemDeleteIconHoverHandler,
-    );
+  const addItemDeleteIconHover = function itemDeleteIconHoverEvent(
+    iconElement,
+  ) {
+    iconElement.addEventListener("mouseenter", todoItemDeleteIconHoverHandler);
   };
 
   const updateProjects = function displayProjects() {
@@ -192,6 +196,20 @@ const ScreenController = function DisplayInteractions() {
     });
   };
 
+  const deleteProjectHandler = function delectProjectEvent(event) {
+    const projectElement = event.target.previousElementSibling;
+    const projectIndex = projectElement.dataset.index;
+    workspace.removeProject(projectIndex);
+    updateProjects();
+  };
+
+  const deleteItemHandler = function deleteItemEvent(event) {
+    const itemElement = event.target.parentElement;
+    const itemIndex = itemElement.dataset.index;
+    currentProject.removeTodoItem(itemIndex);
+    updateItems(currentProject);
+  };
+
   const projectsClickHanlderFactory = function GenerateProjectsClickHander(
     workspaceType,
   ) {
@@ -211,67 +229,87 @@ const ScreenController = function DisplayInteractions() {
   const projectsClickHandler = projectsClickHanlderFactory(workspace);
   projectsElement.addEventListener("click", projectsClickHandler);
 
-  const deleteProjectHandler = function delectProjectEvent(event) {
-    const iconState = event.target.dataset.state;
-
-    if (iconState) {
-      const projectElement = event.target.previousElementSibling;
-      const projectIndex = projectElement.dataset.index;
-      workspace.removeProject(projectIndex);
-      updateProjects();
+  const checkFormControlValidity = function checkIndiviualControlValidity(
+    controlElement,
+  ) {
+    if (!controlElement.checkValidity()) {
+      controlElement.classList.add("invalid");
     }
   };
 
-  const deleteItemHandler = function deleteItemEvent(event) {
-    const iconState = event.target.dataset.state;
-
-    if (iconState) {
-      const itemElement = event.target.parentElement;
-      const itemIndex = itemElement.dataset.index;
-      currentProject.removeTodoItem(itemIndex);
-      updateItems(currentProject);
-    }
+  const addLiveValidityCheck = function addLiveValidityCheckForFormControls(
+    inputFields,
+  ) {
+    inputFields.forEach((input) =>
+      input.addEventListener("input", (event) => {
+        if (event.target.checkValidity())
+          event.target.classList.remove("invalid");
+        else event.target.classList.add("invalid");
+      }),
+    );
   };
 
-  projectsContainerElement.addEventListener("click", deleteProjectHandler);
-  todoItemsContainerElement.addEventListener("click", deleteItemHandler);
+  const reportFormControlError = function reportFormControlError(form) {
+    form.reportValidity();
+    const inputFields = getInputFieldsInsideForm(form);
+    inputFields.forEach(checkFormControlValidity);
+    addLiveValidityCheck(inputFields);
+  };
 
   const projectAddHandler = function addNewProjectToWorkspace(event) {
     event.preventDefault();
-    const inputField = event.target.parentElement.previousElementSibling;
-    const projectName = inputField.value;
 
-    if (projectName) {
-      const newProject = createProject(projectName);
+    if (projectDialogForm.checkValidity()) {
+      // const inputField = event.target.parentElement.previousElementSibling;
+      const inputField = getInputFieldsInsideForm(projectDialogForm)[0];
+      const projectName = inputField.value;
 
-      workspace.addProject(newProject);
+      if (projectName) {
+        const newProject = createProject(projectName);
+
+        workspace.addProject(newProject);
+      }
+      updateProjects();
+      projectDialog.close();
+    } else {
+      reportFormControlError(projectDialogForm);
     }
-    updateProjects();
-    projectDialog.close();
   };
 
   const todoItemAddHandler = function addTodoItemToProject(event) {
-    const todoItemForm = event.target.parentElement.parentElement;
-    const inputItems = getInputFieldsInsideForm(todoItemForm);
+    event.preventDefault();
 
-    const [
-      itemTitleValue,
-      itemDescriptionValue,
-      itemDueDateValue,
-      itemPriorityValue,
-      itemNoteValue,
-    ] = inputItems.map((item) => item.value);
-
-    const todoItem = createTodoItem({
-      title: itemTitleValue,
-      description: itemDescriptionValue,
-      dueDate: itemDueDateValue,
-      priority: itemPriorityValue,
-      note: itemNoteValue,
-    });
-    currentProject.addTodoItem(todoItem);
-    updateItems(currentProject);
+    if (itemDialogForm.checkValidity()) {
+      const inputItems = getInputFieldsInsideForm(itemDialogForm);
+  
+      const [
+        itemTitleValue,
+        itemDescriptionValue,
+        itemDueDateValue,
+        itemPriorityValue,
+        itemNoteValue,
+      ] = inputItems.map((item) => item.value);
+  
+      const todoItem = createTodoItem({
+        title: itemTitleValue,
+        description: itemDescriptionValue,
+        dueDate: itemDueDateValue,
+        priority: itemPriorityValue,
+        note: itemNoteValue,
+      });
+      currentProject.addTodoItem(todoItem);
+      updateItems(currentProject);
+      itemDialog.close();
+    }
+    else {
+      reportFormControlError(itemDialogForm);
+    }
   };
+
+  const addMinDueDate = function addTodoItemMinimumDueDate() {
+    const dueDateField = document.querySelector(".item-due-date-field");
+    [dueDateField.min] = new Date().toISOString().split("T");
+  }
 
   projectAddButton.addEventListener("click", projectAddHandler);
   todoItemAddButton.addEventListener("click", todoItemAddHandler);
@@ -279,11 +317,12 @@ const ScreenController = function DisplayInteractions() {
   const showProjectDialog = function displayProjectDialogBox() {
     projectDialog.showModal();
   };
-
-  updateDefaultProjects();
-  updateItems(currentProject);
   projectAddIcon.addEventListener("click", showProjectDialog);
   itemAddIcon.addEventListener("click", showItemDialog);
+
+  addMinDueDate();
+  updateDefaultProjects();
+  updateItems(currentProject);
 };
 
 export default ScreenController;
