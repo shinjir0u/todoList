@@ -256,6 +256,17 @@ const ScreenController = function DisplayInteractions() {
     addLiveValidityCheck(inputFields);
   };
 
+  const resetFormControls = function resetFormControlsValues(form) {
+    const inputFields = [...form.children];
+    inputFields.forEach((input) => {
+      if (input.nodeName === "SELECT") {
+        // eslint-disable-next-line no-param-reassign
+        input.value = "default";
+      // eslint-disable-next-line no-param-reassign
+      } else input.value = "";
+    });
+  };
+
   const projectAddHandler = function addNewProjectToWorkspace(event) {
     event.preventDefault();
 
@@ -271,6 +282,7 @@ const ScreenController = function DisplayInteractions() {
       }
       updateProjects();
       projectDialog.close();
+      resetFormControls(projectDialogForm);
     } else {
       reportFormControlError(projectDialogForm);
     }
@@ -281,7 +293,7 @@ const ScreenController = function DisplayInteractions() {
 
     if (itemDialogForm.checkValidity()) {
       const inputItems = getInputFieldsInsideForm(itemDialogForm);
-  
+
       const [
         itemTitleValue,
         itemDescriptionValue,
@@ -289,7 +301,7 @@ const ScreenController = function DisplayInteractions() {
         itemPriorityValue,
         itemNoteValue,
       ] = inputItems.map((item) => item.value);
-  
+
       const todoItem = createTodoItem({
         title: itemTitleValue,
         description: itemDescriptionValue,
@@ -300,8 +312,8 @@ const ScreenController = function DisplayInteractions() {
       currentProject.addTodoItem(todoItem);
       updateItems(currentProject);
       itemDialog.close();
-    }
-    else {
+      resetFormControls(itemDialogForm);
+    } else {
       reportFormControlError(itemDialogForm);
     }
   };
@@ -309,7 +321,7 @@ const ScreenController = function DisplayInteractions() {
   const addMinDueDate = function addTodoItemMinimumDueDate() {
     const dueDateField = document.querySelector(".item-due-date-field");
     [dueDateField.min] = new Date().toISOString().split("T");
-  }
+  };
 
   projectAddButton.addEventListener("click", projectAddHandler);
   todoItemAddButton.addEventListener("click", todoItemAddHandler);
