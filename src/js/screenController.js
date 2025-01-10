@@ -1,3 +1,4 @@
+import { format, differenceInCalendarDays } from "date-fns";
 import {
   createTodoItem,
   createProject,
@@ -159,6 +160,22 @@ const ScreenController = function DisplayInteractions() {
     }
   };
 
+  const generateDueDateValue = function generateAppropriateStringForDaysDiff(
+    dueDate,
+  ) {
+    const todayDate = format(Date.now(), "yyyy-MM-dd");
+    const daysDifference = differenceInCalendarDays(dueDate, todayDate);
+
+    let resultString = "";
+    if (daysDifference < 0) resultString = "Overdue";
+    else if (daysDifference === 0) resultString = "Today";
+    else if (daysDifference === 1) resultString = "Tomorrow";
+    else if (daysDifference > 1) resultString = `${daysDifference} days left`;
+    else resultString = "invalid";
+
+    return resultString;
+  };
+
   const updateItems = function displayTodoItems(project) {
     todoItemsContainerElement.textContent = "";
     changeHeading(project);
@@ -181,7 +198,7 @@ const ScreenController = function DisplayInteractions() {
 
       const itemDueDateElement = document.createElement("p");
       itemDueDateElement.classList.add("item-due-date");
-      itemDueDateElement.textContent = item.getDueDate();
+      itemDueDateElement.textContent = generateDueDateValue(item.getDueDate());
 
       const itemDeleteIcon = deleteIcon.cloneNode(true);
       itemDeleteIcon.classList.add("item-delete-icon");
@@ -262,7 +279,7 @@ const ScreenController = function DisplayInteractions() {
       if (input.nodeName === "SELECT") {
         // eslint-disable-next-line no-param-reassign
         input.value = "default";
-      // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign
       } else input.value = "";
     });
   };
