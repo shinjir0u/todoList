@@ -171,7 +171,7 @@ const ScreenController = function DisplayInteractions() {
     else if (daysDifference === 0) resultString = "Today";
     else if (daysDifference === 1) resultString = "Tomorrow";
     else if (daysDifference > 1) resultString = `${daysDifference} days left`;
-    else resultString = "invalid";
+    else resultString = "...";
 
     return resultString;
   };
