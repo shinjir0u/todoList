@@ -240,6 +240,28 @@ const ScreenController = function DisplayInteractions() {
   const crossElements = changeElementsTextDecorationFactory("line-through");
   const resetElementsTextDecoration = changeElementsTextDecorationFactory("");
 
+  const itemClickHander = function clickTodoItemEventHandler(event) {
+    if (event.target.nodeName !== "DIV") return;
+
+    const inputFields = getInputFieldsInsideForm(itemDialogForm);
+    const [titleField, descriptionField, dueDateField, priorityField] = inputFields;
+    const itemIndex = event.target.dataset.index;
+    const item = currentProject.getTodoItemWithIndex(itemIndex);
+
+    titleField.value = item.getTitle();
+    descriptionField.value = item.getDescription();
+    dueDateField.value = item.getDueDate();
+    priorityField.value = item.getPriority();
+
+    showItemDialog();
+  }
+
+
+  const itemHoverHandler = function hoverTodoItemEventHandler(event) {
+    // eslint-disable-next-line no-param-reassign
+    event.target.style.cursor = "pointer";
+  }
+  
   const updateItems = function displayTodoItems(project) {
     todoItemsContainerElement.textContent = "";
     changeHeading(project);
@@ -283,6 +305,9 @@ const ScreenController = function DisplayInteractions() {
       const elementsToChangeTextDecoration = [
         itemTitleElement,
       ];
+
+      itemContainer.addEventListener("mouseenter", itemHoverHandler);
+      itemContainer.addEventListener("click", itemClickHander);
 
       todoItemsContainerElement.appendChild(itemContainer);
       itemContainer.appendChild(checkBoxLabel);
