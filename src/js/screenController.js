@@ -19,13 +19,15 @@ const ScreenController = function DisplayInteractions() {
   const defaultProjectsElement = document.querySelector(".default-projects");
   const projectsElement = document.querySelector(".projects");
   const projectAddIcon = document.querySelector(".project-add-icon");
-  const projectAddButton = document.querySelector(".project-dialog-button");
+  const projectAddButton = document.querySelector(".project-add-button");
+  const projectCancelButton = document.querySelector(".project-cancel-button");
   const projectDialog = document.querySelector(".project-dialog");
   const projectDialogForm = document.querySelector(".project-add-form");
 
   const itemAddIcon = document.querySelector(".item-add-icon");
   const todoItemsContainerElement = document.querySelector(".todo-items");
-  const todoItemAddButton = document.querySelector(".item-dialog-button");
+  const todoItemAddButton = document.querySelector(".item-add-button");
+  const todoItemCancelButton = document.querySelector(".item-cancel-button");
   const itemDialog = document.querySelector(".item-dialog");
   const itemDialogForm = document.querySelector(".item-add-form");
 
@@ -236,8 +238,8 @@ const ScreenController = function DisplayInteractions() {
     const parentProjectName =
       itemElement.firstElementChild.nextElementSibling.firstElementChild
         .textContent;
-      const itemIndex = itemElement.dataset.index;
-      const item = currentProject.getTodoItemWithIndex(itemIndex);
+    const itemIndex = itemElement.dataset.index;
+    const item = currentProject.getTodoItemWithIndex(itemIndex);
 
     if (currentProject === defaultProject && parentProjectName !== "DEFAULT") {
       const parentProject = workspace.getProjectWithName(parentProjectName);
@@ -382,6 +384,16 @@ const ScreenController = function DisplayInteractions() {
   };
   projectAddIcon.addEventListener("click", showProjectDialog);
   itemAddIcon.addEventListener("click", showItemDialog);
+
+  projectCancelButton.addEventListener("click", () => {
+    projectDialog.close();
+    resetFormControls(projectDialogForm);
+  });
+
+  todoItemCancelButton.addEventListener("click", () => {
+    itemDialog.close();
+    resetFormControls(itemDialogForm);
+  });
 
   addMinDueDate();
   updateDefaultProjects();
