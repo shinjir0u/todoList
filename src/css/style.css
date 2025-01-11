@@ -73,6 +73,13 @@ h6 {
   --required-red-color: rgb(204, 37, 37);
 }
 
+svg {
+  display: grid;
+  padding: 0;
+  margin: 0;
+  place-items: center;
+}
+
 button,
 input[type="text"],
 textarea {
@@ -428,6 +435,22 @@ input[type="checkbox"]:checked::before {
   color: var(--dark-brown-color);
   grid-area: title;
   margin-top: -2px;
+  display: flex;
+  align-items: center;
+}
+
+.item-project {
+  font-weight: normal;
+  font-size: 0.6em;
+  margin-left: 1em;
+}
+
+.item-project::before {
+  content: "(";
+}
+
+.item-project::after {
+  content: ")";
 }
 
 .item-due-date {

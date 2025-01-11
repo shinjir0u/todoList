@@ -4,12 +4,14 @@ const createTodoItem = function TodoItem({
   dueDate = "",
   priority = "",
   note = "",
+  project = "",
 } = {}) {
   let itemTitle = title;
   let itemDescription = description;
   let itemDueDate = dueDate;
   let itemPriority = priority;
   let itemNote = note;
+  let itemProject = project;
 
   const setTitle = (titleValue) => {
     itemTitle = titleValue;
@@ -31,11 +33,16 @@ const createTodoItem = function TodoItem({
     itemNote = noteValue;
   };
 
+  const setProject = (projectValue) => {
+    itemProject = projectValue;
+  };
+
   const getTitle = () => itemTitle;
   const getDescription = () => itemDescription;
   const getDueDate = () => itemDueDate;
   const getPriority = () => itemPriority;
   const getNote = () => itemNote;
+  const getProject = () => itemProject;
 
   return {
     setTitle,
@@ -43,11 +50,13 @@ const createTodoItem = function TodoItem({
     setDueDate,
     setPriority,
     setNote,
+    setProject,
     getTitle,
     getDescription,
     getDueDate,
     getPriority,
     getNote,
+    getProject,
   };
 };
 
@@ -58,18 +67,32 @@ const createListContainer = function ListContainer() {
     itemList.push(item);
   };
 
-  const removeItemFromList = (itemIndex) => {
+  const removeItemWithIndex = (itemIndex) => {
     itemList.splice(itemIndex, 1);
   };
 
-  const getItemFromList = (itemIndex) => itemList[itemIndex];
+  const removeItem = (item) => {
+    const itemIndex = itemList.indexOf(item);
+    removeItemWithIndex(itemIndex);
+  };
+
+  const getItemFromListWithIndex = (itemIndex) => itemList[itemIndex];
+
+  const getItemWithTitle = (itemTitle) => {
+    const [requiredItem] = itemList.filter(
+      (item) => item.getTitle() === itemTitle,
+    );
+    return requiredItem;
+  };
 
   const getItemList = () => itemList;
 
   return {
     addItemToList,
-    removeItemFromList,
-    getItemFromList,
+    removeItemWithIndex,
+    removeItem,
+    getItemFromListWithIndex,
+    getItemWithTitle,
     getItemList,
   };
 };
@@ -81,8 +104,10 @@ const createProject = function Project(name) {
   const getProjectName = () => projectName;
   return {
     addTodoItem: itemList.addItemToList,
-    removeTodoItem: itemList.removeItemFromList,
-    getTodoItem: itemList.getItemFromList,
+    removeTodoItemWithIndex: itemList.removeItemWithIndex,
+    removeTodoItem: itemList.removeItem,
+    getTodoItemWithIndex: itemList.getItemFromListWithIndex,
+    getTodoItemWithTitle: itemList.getItemWithTitle,
     getTodoItems: itemList.getItemList,
     getProjectName,
   };
@@ -90,10 +115,21 @@ const createProject = function Project(name) {
 
 const createWorkspace = function Workspace() {
   const itemList = createListContainer();
+
+  const getProjectWithName = (projectName) => {
+    const projects = itemList.getItemList();
+
+    const [requiredItem] = projects.filter(
+      (project) => project.getProjectName() === projectName,
+    );
+    return requiredItem;
+  };
+
   return {
     addProject: itemList.addItemToList,
-    removeProject: itemList.removeItemFromList,
-    getProject: itemList.getItemFromList,
+    removeProjectWithIndex: itemList.removeItemWithIndex,
+    getProjectWithIndex: itemList.getItemFromListWithIndex,
+    getProjectWithName,
     getProjects: itemList.getItemList,
   };
 };
@@ -105,13 +141,13 @@ const createDefaultWorkspace = function DefaultWorkspace() {
 
   itemList.push(defaultProject, completedProject);
 
-  const getProject = (index) => itemList[index];
+  const getProjectWithIndex = (index) => itemList[index];
 
   return {
     getDefaultProjects: () => itemList,
     getDefaultProject: () => defaultProject,
     getCompletedProject: () => completedProject,
-    getProject,
+    getProjectWithIndex,
   };
 };
 

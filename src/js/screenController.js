@@ -9,7 +9,10 @@ import {
 const ScreenController = function DisplayInteractions() {
   const workspace = createWorkspace();
   const defaultWorkspace = createDefaultWorkspace();
-  let currentProject = defaultWorkspace.getDefaultProject();
+  const defaultProject = defaultWorkspace.getDefaultProject();
+  const completedProject = defaultWorkspace.getCompletedProject();
+  let currentProject = defaultProject;
+
   const deleteIcon = document.querySelector(".delete-icon");
   const deleteHoverIcon = document.querySelector(".delete-icon-hover");
 
@@ -196,6 +199,11 @@ const ScreenController = function DisplayInteractions() {
       itemTitleElement.classList.add("item-title");
       itemTitleElement.textContent = item.getTitle();
 
+      const itemProjectElement = document.createElement("span");
+      itemProjectElement.classList.add("item-project");
+      itemProjectElement.textContent = item.getProject();
+      itemTitleElement.appendChild(itemProjectElement);
+
       const itemDueDateElement = document.createElement("p");
       itemDueDateElement.classList.add("item-due-date");
       itemDueDateElement.textContent = generateDueDateValue(item.getDueDate());
@@ -216,14 +224,35 @@ const ScreenController = function DisplayInteractions() {
   const deleteProjectHandler = function delectProjectEvent(event) {
     const projectElement = event.target.previousElementSibling;
     const projectIndex = projectElement.dataset.index;
-    workspace.removeProject(projectIndex);
+    workspace.removeProjectWithIndex(projectIndex);
     updateProjects();
   };
 
   const deleteItemHandler = function deleteItemEvent(event) {
-    const itemElement = event.target.parentElement;
-    const itemIndex = itemElement.dataset.index;
-    currentProject.removeTodoItem(itemIndex);
+    const itemElement =
+      event.target.parentElement.nodeName === "DIV"
+        ? event.target.parentElement
+        : event.target.parentElement.parentElement;
+    const parentProjectName =
+      itemElement.firstElementChild.nextElementSibling.firstElementChild
+        .textContent;
+      const itemIndex = itemElement.dataset.index;
+      const item = currentProject.getTodoItemWithIndex(itemIndex);
+
+    if (currentProject === defaultProject && parentProjectName !== "DEFAULT") {
+      const parentProject = workspace.getProjectWithName(parentProjectName);
+
+      parentProject.removeTodoItem(item);
+      defaultProject.removeTodoItem(item);
+    } else if (
+      currentProject === defaultProject &&
+      parentProjectName === "DEFAULT"
+    ) {
+      currentProject.removeTodoItemWithIndex(itemIndex);
+    } else {
+      currentProject.removeTodoItem(item);
+      defaultProject.removeTodoItem(item);
+    }
     updateItems(currentProject);
   };
 
@@ -234,7 +263,7 @@ const ScreenController = function DisplayInteractions() {
       const projectIndex = Number(event.target.dataset.index);
 
       if (Number.isInteger(projectIndex)) {
-        currentProject = workspaceType.getProject(projectIndex);
+        currentProject = workspaceType.getProjectWithIndex(projectIndex);
         updateItems(currentProject);
       }
     };
@@ -318,6 +347,7 @@ const ScreenController = function DisplayInteractions() {
         itemPriorityValue,
         itemNoteValue,
       ] = inputItems.map((item) => item.value);
+      const itemProjectValue = currentProject.getProjectName();
 
       const todoItem = createTodoItem({
         title: itemTitleValue,
@@ -325,8 +355,12 @@ const ScreenController = function DisplayInteractions() {
         dueDate: itemDueDateValue,
         priority: itemPriorityValue,
         note: itemNoteValue,
+        project: itemProjectValue,
       });
       currentProject.addTodoItem(todoItem);
+      if (currentProject !== defaultProject)
+        defaultProject.addTodoItem(todoItem);
+
       updateItems(currentProject);
       itemDialog.close();
       resetFormControls(itemDialogForm);
