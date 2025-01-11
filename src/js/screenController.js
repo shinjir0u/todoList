@@ -155,12 +155,38 @@ const ScreenController = function DisplayInteractions() {
     iconElement.removeEventListener("click", showItemDialog);
   };
 
+  const activateItemDeleteIcons = function activateItemDeleteIcons(
+    deleteIcons,
+  ) {
+    deleteIcons.forEach((deleteIconElement) => {
+      deleteIconElement.classList.remove("disabled");
+      addItemDeleteIconHover(deleteIconElement);
+    });
+  };
+
+  const deactivateItemDeleteIcons = function deactivateItemDeleteIcons(
+    deleteIcons,
+  ) {
+    deleteIcons.forEach((deleteIconElement) => {
+      deleteIconElement.classList.add("disabled");
+      deleteIconElement.removeEventListener(
+        "mouseenter",
+        todoItemDeleteIconHoverHandler,
+      );
+    });
+  };
+
   const disableIconIfNeeded = function considerDiablingItemAddIcon(project) {
     const projectName = project.getProjectName();
+    const items = [...todoItemsContainerElement.children];
+    const deleteIcons = items.map((item) => item.lastElementChild);
+
     activateProjectAddIcon(itemAddIcon);
+    activateItemDeleteIcons(deleteIcons);
     itemAddIcon.style.cursor = "pointer";
     if (projectName === "COMPLETED") {
       deactivateProjectAddIcon(itemAddIcon);
+      deactivateItemDeleteIcons(deleteIcons);
       itemAddIcon.style.cursor = "default";
     }
   };
@@ -181,10 +207,34 @@ const ScreenController = function DisplayInteractions() {
     return resultString;
   };
 
+  const checkBoxClickHandler = function todoItemCheckBoxClickHandler(event) {
+    const itemElement = event.target.parentElement.parentElement;
+    const itemIndex = itemElement.dataset.index;
+    const item = currentProject.getTodoItemWithIndex(itemIndex);
+
+    item.setCompleted(!item.isCompleted());
+    if (item.isCompleted()) completedProject.addTodoItem(item);
+    else completedProject.removeTodoItem(item);
+    // eslint-disable-next-line no-use-before-define
+    updateItems(currentProject);
+  };
+
+  const changeElementsTextDecorationFactory =
+    function changeElementsTextDecorationFactory(textDecoration) {
+      return function changeElementsTextDecoration(elements) {
+        elements.forEach((element) => {
+          // eslint-disable-next-line no-param-reassign
+          element.style.textDecoration = textDecoration;
+        });
+      };
+    };
+
+  const crossElements = changeElementsTextDecorationFactory("line-through");
+  const resetElementsTextDecoration = changeElementsTextDecorationFactory("");
+
   const updateItems = function displayTodoItems(project) {
     todoItemsContainerElement.textContent = "";
     changeHeading(project);
-    disableIconIfNeeded(project);
 
     project.getTodoItems().forEach((item, index) => {
       const itemContainer = document.createElement("div");
@@ -195,6 +245,7 @@ const ScreenController = function DisplayInteractions() {
       checkBoxLabel.classList.add("checkbox-label");
       const checkBoxElement = document.createElement("input");
       checkBoxElement.type = "checkbox";
+      checkBoxElement.addEventListener("click", checkBoxClickHandler);
       checkBoxLabel.appendChild(checkBoxElement);
 
       const itemTitleElement = document.createElement("p");
@@ -215,11 +266,24 @@ const ScreenController = function DisplayInteractions() {
       itemDeleteIcon.dataset.state = "default";
       addItemDeleteIconHover(itemDeleteIcon);
 
+      const elementsToChangeTextDecoration = [
+        itemTitleElement,
+        itemDueDateElement,
+      ];
+      
       todoItemsContainerElement.appendChild(itemContainer);
       itemContainer.appendChild(checkBoxLabel);
       itemContainer.appendChild(itemTitleElement);
       itemContainer.appendChild(itemDueDateElement);
       itemContainer.appendChild(itemDeleteIcon);
+
+      disableIconIfNeeded(project);
+      if (item.isCompleted()) {
+        crossElements(elementsToChangeTextDecoration);
+        checkBoxElement.checked = true;
+      } else {
+        resetElementsTextDecoration(elementsToChangeTextDecoration);
+      }
     });
   };
 

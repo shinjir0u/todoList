@@ -12,6 +12,7 @@ const createTodoItem = function TodoItem({
   let itemPriority = priority;
   let itemNote = note;
   let itemProject = project;
+  let completed = false;
 
   const setTitle = (titleValue) => {
     itemTitle = titleValue;
@@ -37,12 +38,17 @@ const createTodoItem = function TodoItem({
     itemProject = projectValue;
   };
 
+  const setCompleted = (completedValue) => {
+    completed = completedValue;
+  }
+
   const getTitle = () => itemTitle;
   const getDescription = () => itemDescription;
   const getDueDate = () => itemDueDate;
   const getPriority = () => itemPriority;
   const getNote = () => itemNote;
   const getProject = () => itemProject;
+  const isCompleted = () => completed;
 
   return {
     setTitle,
@@ -51,12 +57,14 @@ const createTodoItem = function TodoItem({
     setPriority,
     setNote,
     setProject,
+    setCompleted,
     getTitle,
     getDescription,
     getDueDate,
     getPriority,
     getNote,
     getProject,
+    isCompleted,
   };
 };
 
