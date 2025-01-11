@@ -229,6 +229,14 @@ const ScreenController = function DisplayInteractions() {
       };
     };
 
+    const generatePriorityText = function generatePriorityText(itemPriority) {
+      const HIGH = "!!!";
+      const MID = "!!";
+      const LOW = "!";
+      const itemPriorities = [HIGH, MID, LOW];
+      return itemPriorities[itemPriority];
+    }
+
   const crossElements = changeElementsTextDecorationFactory("line-through");
   const resetElementsTextDecoration = changeElementsTextDecorationFactory("");
 
@@ -252,9 +260,13 @@ const ScreenController = function DisplayInteractions() {
       itemTitleElement.classList.add("item-title");
       itemTitleElement.textContent = item.getTitle();
 
+      const itemPriorityElement = document.createElement("span");
+      itemPriorityElement.classList.add("item-priority");
+      itemPriorityElement.textContent = generatePriorityText(item.getPriority()) || "";
       const itemProjectElement = document.createElement("span");
       itemProjectElement.classList.add("item-project");
       itemProjectElement.textContent = item.getProject();
+      itemTitleElement.appendChild(itemPriorityElement);
       itemTitleElement.appendChild(itemProjectElement);
 
       const itemDueDateElement = document.createElement("p");
@@ -301,7 +313,7 @@ const ScreenController = function DisplayInteractions() {
         ? event.target.parentElement
         : event.target.parentElement.parentElement;
     const parentProjectName =
-      itemElement.firstElementChild.nextElementSibling.firstElementChild
+      itemElement.firstElementChild.nextElementSibling.lastElementChild
         .textContent;
     const itemIndex = itemElement.dataset.index;
     const item = currentProject.getTodoItemWithIndex(itemIndex);

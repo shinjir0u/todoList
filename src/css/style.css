@@ -439,6 +439,12 @@ input[type="checkbox"]:checked::before {
   align-items: center;
 }
 
+.item-priority {
+  font-weight: normal;
+  font-size: 0.8em;
+  margin-left: 0.5em;
+}
+
 .item-project {
   font-weight: normal;
   font-size: 0.6em;
