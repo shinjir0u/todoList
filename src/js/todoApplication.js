@@ -189,11 +189,21 @@ const createDefaultWorkspace = function DefaultWorkspace() {
 
   const getProjectWithIndex = (index) => itemList[index];
 
+  const getProjectWithName = (projectName) => {
+    const projects = itemList;
+
+    const [requiredItem] = projects.filter(
+      (project) => project.getProjectName() === projectName,
+    );
+    return requiredItem;
+  };
+
   return {
+    getProjectWithIndex,
+    getProjectWithName,
     getDefaultProjects: () => itemList,
     getDefaultProject: () => defaultProject,
     getCompletedProject: () => completedProject,
-    getProjectWithIndex,
   };
 };
 

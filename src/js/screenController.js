@@ -20,6 +20,7 @@ const ScreenController = function DisplayInteractions() {
   const projectsElement = document.querySelector(".projects");
   const projectAddIcon = document.querySelector(".project-add-icon");
   const projectAddButton = document.querySelector(".project-add-button");
+  const projectChangeButton = document.querySelector(".project-change-button");
   const projectCancelButton = document.querySelector(".project-cancel-button");
   const projectDialog = document.querySelector(".project-dialog");
   const projectDialogForm = document.querySelector(".project-add-form");
@@ -27,6 +28,7 @@ const ScreenController = function DisplayInteractions() {
   const itemAddIcon = document.querySelector(".item-add-icon");
   const todoItemsContainerElement = document.querySelector(".todo-items");
   const todoItemAddButton = document.querySelector(".item-add-button");
+  const todoItemChangeButton = document.querySelector(".item-change-button");
   const todoItemCancelButton = document.querySelector(".item-cancel-button");
   const itemDialog = document.querySelector(".item-dialog");
   const itemDialogForm = document.querySelector(".item-add-form");
@@ -229,13 +231,13 @@ const ScreenController = function DisplayInteractions() {
       };
     };
 
-    const generatePriorityText = function generatePriorityText(itemPriority) {
-      const HIGH = "!!!";
-      const MID = "!!";
-      const LOW = "!";
-      const itemPriorities = [HIGH, MID, LOW];
-      return itemPriorities[itemPriority];
-    }
+  const generatePriorityText = function generatePriorityText(itemPriority) {
+    const HIGH = "!!!";
+    const MID = "!!";
+    const LOW = "!";
+    const itemPriorities = [HIGH, MID, LOW];
+    return itemPriorities[itemPriority];
+  };
 
   const crossElements = changeElementsTextDecorationFactory("line-through");
   const resetElementsTextDecoration = changeElementsTextDecorationFactory("");
@@ -244,24 +246,29 @@ const ScreenController = function DisplayInteractions() {
     if (event.target.nodeName !== "DIV") return;
 
     const inputFields = getInputFieldsInsideForm(itemDialogForm);
-    const [titleField, descriptionField, dueDateField, priorityField] = inputFields;
+    const [titleField, descriptionField, dueDateField, priorityField] =
+      inputFields;
     const itemIndex = event.target.dataset.index;
     const item = currentProject.getTodoItemWithIndex(itemIndex);
+
+    const itemTitle = item.getTitle();
+    itemDialogForm.lastElementChild.textContent = itemTitle;
 
     titleField.value = item.getTitle();
     descriptionField.value = item.getDescription();
     dueDateField.value = item.getDueDate();
     priorityField.value = item.getPriority();
 
+    todoItemChangeButton.style.display = "block";
+    todoItemAddButton.style.display = "none";
     showItemDialog();
-  }
-
+  };
 
   const itemHoverHandler = function hoverTodoItemEventHandler(event) {
     // eslint-disable-next-line no-param-reassign
     event.target.style.cursor = "pointer";
-  }
-  
+  };
+
   const updateItems = function displayTodoItems(project) {
     todoItemsContainerElement.textContent = "";
     changeHeading(project);
@@ -284,7 +291,8 @@ const ScreenController = function DisplayInteractions() {
 
       const itemPriorityElement = document.createElement("span");
       itemPriorityElement.classList.add("item-priority");
-      itemPriorityElement.textContent = generatePriorityText(item.getPriority()) || "";
+      itemPriorityElement.textContent =
+        generatePriorityText(item.getPriority()) || "";
       const itemProjectElement = document.createElement("span");
       itemProjectElement.classList.add("item-project");
       itemProjectElement.textContent = item.getProject();
@@ -302,9 +310,7 @@ const ScreenController = function DisplayInteractions() {
       itemDeleteIcon.dataset.state = "default";
       addItemDeleteIconHover(itemDeleteIcon);
 
-      const elementsToChangeTextDecoration = [
-        itemTitleElement,
-      ];
+      const elementsToChangeTextDecoration = [itemTitleElement];
 
       itemContainer.addEventListener("mouseenter", itemHoverHandler);
       itemContainer.addEventListener("click", itemClickHander);
@@ -486,6 +492,51 @@ const ScreenController = function DisplayInteractions() {
     }
   };
 
+  const itemChangeHandler = function changeTodoItemValues(event) {
+    event.preventDefault();
+
+    if (itemDialogForm.checkValidity()) {
+      const inputItems = getInputFieldsInsideForm(itemDialogForm);
+
+      const [
+        itemTitle,
+        itemDescriptionValue,
+        itemDueDateValue,
+        itemPriorityValue,
+        itemNoteValue,
+      ] = inputItems.map((item) => item.value);
+      let newItemTitleValue = itemTitle;
+
+      const itemTitleToChange = itemDialogForm.lastElementChild.textContent;
+      const itemToChange =
+        currentProject.getTodoItemWithTitle(itemTitleToChange);
+      const parentProjectName = itemToChange.getProject();
+      const parentProject =
+        parentProjectName === "DEFAULT" || parentProjectName === "COMPLETED"
+          ? defaultWorkspace.getProjectWithName(parentProjectName)
+          : workspace.getProjectWithName(parentProjectName);
+      if (parentProject.itemExists(newItemTitleValue) && newItemTitleValue !== itemTitleToChange) {
+        const item = parentProject.getTodoItemWithTitle(newItemTitleValue);
+        item.increaseDuplicatedNameCount();
+        const count = item.getDuplicatedNameCount();
+        newItemTitleValue = `${newItemTitleValue}_${count}`;
+      }
+      itemToChange.setTitle(newItemTitleValue);
+      itemToChange.setDescription(itemDescriptionValue);
+      itemToChange.setDueDate(itemDueDateValue);
+      itemToChange.setPriority(itemPriorityValue);
+      itemToChange.setNote(itemNoteValue);
+
+      updateItems(currentProject);
+      itemDialog.close();
+      todoItemAddButton.style.display = "block";
+      todoItemChangeButton.style.display = "none";
+      resetFormControls(itemDialogForm);
+    } else {
+      reportFormControlError(itemDialogForm);
+    }
+  };
+
   const addMinDueDate = function addTodoItemMinimumDueDate() {
     const dueDateField = document.querySelector(".item-due-date-field");
     [dueDateField.min] = new Date().toISOString().split("T");
@@ -509,6 +560,8 @@ const ScreenController = function DisplayInteractions() {
     itemDialog.close();
     resetFormControls(itemDialogForm);
   });
+
+  todoItemChangeButton.addEventListener("click", itemChangeHandler);
 
   addMinDueDate();
   updateDefaultProjects();

@@ -360,6 +360,8 @@ dialog textarea.invalid {
 .item-dialog-buttons {
   grid-column: span 2;
   justify-self: end;
+  display: flex;
+  gap: 0.5em;
 }
 
 .item-dialog-button {
@@ -476,4 +478,9 @@ input[type="checkbox"]:checked::before {
 
 .item-delete-icon.disabled {
   opacity: 0.7;
+}
+
+.project-change-button,
+.item-change-button {
+  display: none;
 }
