@@ -290,7 +290,6 @@ const ScreenController = function DisplayInteractions() {
       itemContainer.appendChild(itemDueDateElement);
       itemContainer.appendChild(itemDeleteIcon);
 
-      disableIconIfNeeded(project);
       if (item.isCompleted()) {
         crossElements(elementsToChangeTextDecoration);
         checkBoxElement.checked = true;
@@ -298,6 +297,7 @@ const ScreenController = function DisplayInteractions() {
         resetElementsTextDecoration(elementsToChangeTextDecoration);
       }
     });
+    disableIconIfNeeded(project);
   };
 
   const deleteProjectHandler = function delectProjectEvent(event) {
