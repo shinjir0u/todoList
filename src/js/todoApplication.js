@@ -13,6 +13,7 @@ const createTodoItem = function TodoItem({
   let itemNote = note;
   let itemProject = project;
   let completed = false;
+  let duplicatedNameCount = 0;
 
   const setTitle = (titleValue) => {
     itemTitle = titleValue;
@@ -40,7 +41,13 @@ const createTodoItem = function TodoItem({
 
   const setCompleted = (completedValue) => {
     completed = completedValue;
-  }
+  };
+
+  const increaseDuplicatedNameCount = () => {
+    duplicatedNameCount += 1;
+  };
+
+  const getDuplicatedNameCount = () => duplicatedNameCount;
 
   const getTitle = () => itemTitle;
   const getDescription = () => itemDescription;
@@ -65,11 +72,15 @@ const createTodoItem = function TodoItem({
     getNote,
     getProject,
     isCompleted,
+    increaseDuplicatedNameCount,
+    getDuplicatedNameCount,
   };
 };
 
 const createListContainer = function ListContainer() {
   const itemList = [];
+  // eslint-disable-next-line prefer-const
+  let duplicatedNameCount = 0;
 
   const addItemToList = (item) => {
     itemList.push(item);
@@ -95,6 +106,12 @@ const createListContainer = function ListContainer() {
 
   const getItemList = () => itemList;
 
+  const increaseDuplicatedNameCount = () => {
+    duplicatedNameCount += 1;
+  };
+
+  const getDuplicatedNameCount = () => duplicatedNameCount;
+
   return {
     addItemToList,
     removeItemWithIndex,
@@ -102,6 +119,8 @@ const createListContainer = function ListContainer() {
     getItemFromListWithIndex,
     getItemWithTitle,
     getItemList,
+    increaseDuplicatedNameCount,
+    getDuplicatedNameCount,
   };
 };
 
@@ -110,14 +129,25 @@ const createProject = function Project(name) {
   const itemList = createListContainer();
 
   const getProjectName = () => projectName;
+
+  const itemExists = (itemTitle) => {
+    const [foundItem] = itemList
+      .getItemList()
+      .filter((item) => item.getTitle() === itemTitle);
+    return !!foundItem;
+  };
+
   return {
+    getProjectName,
+    itemExists,
     addTodoItem: itemList.addItemToList,
     removeTodoItemWithIndex: itemList.removeItemWithIndex,
     removeTodoItem: itemList.removeItem,
     getTodoItemWithIndex: itemList.getItemFromListWithIndex,
     getTodoItemWithTitle: itemList.getItemWithTitle,
     getTodoItems: itemList.getItemList,
-    getProjectName,
+    getDuplicatedNameCount: itemList.getDuplicatedNameCount,
+    increaseDuplicatedNameCount: itemList.increaseDuplicatedNameCount,
   };
 };
 
@@ -133,11 +163,19 @@ const createWorkspace = function Workspace() {
     return requiredItem;
   };
 
+  const projectExists = (projectName) => {
+    const [foundProject] = itemList
+      .getItemList()
+      .filter((project) => project.getProjectName() === projectName);
+    return !!foundProject;
+  };
+
   return {
+    getProjectWithName,
+    projectExists,
     addProject: itemList.addItemToList,
     removeProjectWithIndex: itemList.removeItemWithIndex,
     getProjectWithIndex: itemList.getItemFromListWithIndex,
-    getProjectWithName,
     getProjects: itemList.getItemList,
   };
 };

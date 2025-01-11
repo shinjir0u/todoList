@@ -259,7 +259,9 @@ const ScreenController = function DisplayInteractions() {
 
       const itemDueDateElement = document.createElement("p");
       itemDueDateElement.classList.add("item-due-date");
-      itemDueDateElement.textContent = generateDueDateValue(item.getDueDate());
+      itemDueDateElement.textContent = item.isCompleted()
+        ? "done"
+        : generateDueDateValue(item.getDueDate());
 
       const itemDeleteIcon = deleteIcon.cloneNode(true);
       itemDeleteIcon.classList.add("item-delete-icon");
@@ -268,9 +270,8 @@ const ScreenController = function DisplayInteractions() {
 
       const elementsToChangeTextDecoration = [
         itemTitleElement,
-        itemDueDateElement,
       ];
-      
+
       todoItemsContainerElement.appendChild(itemContainer);
       itemContainer.appendChild(checkBoxLabel);
       itemContainer.appendChild(itemTitleElement);
@@ -385,13 +386,18 @@ const ScreenController = function DisplayInteractions() {
     if (projectDialogForm.checkValidity()) {
       // const inputField = event.target.parentElement.previousElementSibling;
       const inputField = getInputFieldsInsideForm(projectDialogForm)[0];
-      const projectName = inputField.value;
+      let projectName = inputField.value;
+      if (!projectName) return;
 
-      if (projectName) {
-        const newProject = createProject(projectName);
-
-        workspace.addProject(newProject);
+      if (workspace.projectExists(projectName)) {
+        const existingProject = workspace.getProjectWithName(projectName);
+        existingProject.increaseDuplicatedNameCount();
+        const count = existingProject.getDuplicatedNameCount();
+        projectName = `${projectName}_${count}`;
       }
+
+      const newProject = createProject(projectName);
+      workspace.addProject(newProject);
       updateProjects();
       projectDialog.close();
       resetFormControls(projectDialogForm);
@@ -407,13 +413,21 @@ const ScreenController = function DisplayInteractions() {
       const inputItems = getInputFieldsInsideForm(itemDialogForm);
 
       const [
-        itemTitleValue,
+        itemTitle,
         itemDescriptionValue,
         itemDueDateValue,
         itemPriorityValue,
         itemNoteValue,
       ] = inputItems.map((item) => item.value);
+      let itemTitleValue = itemTitle;
       const itemProjectValue = currentProject.getProjectName();
+      const parentProject = currentProject;
+      if (parentProject.itemExists(itemTitleValue)) {
+        const item = parentProject.getTodoItemWithTitle(itemTitleValue);
+        item.increaseDuplicatedNameCount();
+        const count = item.getDuplicatedNameCount();
+        itemTitleValue = `${itemTitleValue}_${count}`;
+      }
 
       const todoItem = createTodoItem({
         title: itemTitleValue,
